@@ -7,6 +7,7 @@ const NewsRoute = require("./Router/NewsRoute/NewsRoute");
 const eventRoute = require("./Router/EventRoute/EventsRoute");
 const TittleRoute = require("./Router/Title Route/TitleRoute");
 const CadaRoute = require("./Router/CadaRoute/CadaCollectRoute");
+const path = require('path');
 
 //MiddleWare
 app.use(cors());

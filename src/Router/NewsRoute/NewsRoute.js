@@ -5,10 +5,13 @@ const newsGetController = require("../../Controller/NewsController/NewsGetContro
 const newsIdBasedController = require("../../Controller/NewsController/NewsIdSearched");
 const newsUpdateController = require("../../Controller/NewsController/NewsUpdateController");
 const NewsDeleteController = require("../../Controller/NewsController/NewsDeleteController");
+const VerifyToken = require("../../../Middleware/verifyToken");
+const UserGetControllerPost = require("../../Controller/NewsController/UserGetControllerPost");
 NewsRoute.get("/view", newsGetController);
 NewsRoute.get("/:id", newsIdBasedController);
-NewsRoute.post("/create", newsPostController);
-NewsRoute.put("/update/:id", newsUpdateController);
-NewsRoute.delete("/:id", NewsDeleteController);
+NewsRoute.post("/create", VerifyToken, newsPostController);
+NewsRoute.put("/update/:id", VerifyToken, newsUpdateController);
+NewsRoute.delete("/:id", VerifyToken, NewsDeleteController);
+NewsRoute.get("/user/posts", VerifyToken, UserGetControllerPost);
 
 module.exports = NewsRoute;

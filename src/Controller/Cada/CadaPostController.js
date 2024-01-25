@@ -3,6 +3,10 @@ const { handleSuccess } = require("../../Services/SuccessError");
 
 const cadaPostController = async (req, res, next) => {
   try {
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
     const { name, fixedTk, paidTk } = req.body;
     const bodyDatas = {
       name,

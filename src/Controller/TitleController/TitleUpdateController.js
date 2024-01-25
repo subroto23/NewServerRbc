@@ -4,6 +4,10 @@ const { ObjectId } = require("mongodb");
 
 const titleUpdateController = async (req, res, next) => {
   try {
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
     const id = req.params.id;
     const { title } = req.body;
     const filter = { _id: new ObjectId(id) };

@@ -4,12 +4,17 @@ const { ObjectId } = require("mongodb");
 
 const CadaUpdateController = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const { name, fixedTk, paidTk } = req.body;
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
+    const id = req?.params?.id;
+    const { name, fixedTk, payTk } = req.body;
     const filter = { _id: new ObjectId(id) };
-    const update = { $set: { name, fixedTk, paidTk } };
-    const options = { new: true };
-    const Updated = await Cada.findOneAndUpdate(filter, update, options);
+    const dataValue = await Cada.findOne(filter);
+    const totalPay = Number(dataValue?.paidTk) + Number(payTk);
+    const update = { $set: { name, fixedTk, paidTk: totalPay } };
+    const Updated = await Cada.findOneAndUpdate(filter, update);
     return handleSuccess(res, {
       statusCode: 201,
       message: "আপডেট করা হয়েছে",

@@ -4,13 +4,14 @@ const titleGetController = require("../../Controller/TitleController/TitleGetCon
 const titleGetByIdController = require("../../Controller/TitleController/TitleIdBasedSearch");
 const titleUpdateController = require("../../Controller/TitleController/TitleUpdateController");
 const titleDeleteController = require("../../Controller/TitleController/TitleDeleteController");
+const VerifyToken = require("../../../Middleware/verifyToken");
 const TittleRoute = express.Router();
 
 //title/heading
 TittleRoute.get("/", titleGetController);
-TittleRoute.get("/:id", titleGetByIdController);
-TittleRoute.post("/create", titlePostController);
-TittleRoute.put("/update/:id", titleUpdateController);
-TittleRoute.delete("/:id", titleDeleteController);
+TittleRoute.get("/:id", VerifyToken, titleGetByIdController);
+TittleRoute.post("/create", VerifyToken, titlePostController);
+TittleRoute.put("/update/:id", VerifyToken, titleUpdateController);
+TittleRoute.delete("/:id", VerifyToken, titleDeleteController);
 
 module.exports = TittleRoute;

@@ -4,9 +4,14 @@ const { NewsModel } = require("../../Dbconfig/DatabaseConfig");
 
 const newsUpdateController = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const { title, details } = req?.body;
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
+    const id = req?.params?.id;
     const filter = { _id: new ObjectId(id) };
-    const update = { $set: req.body };
+    const update = { $set: { title, details } };
     const options = { new: true };
     const Updated = await NewsModel.updateOne(filter, update, options);
     return handleSuccess(res, {

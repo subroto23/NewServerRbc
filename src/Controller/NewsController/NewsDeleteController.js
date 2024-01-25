@@ -4,6 +4,10 @@ const { NewsModel } = require("../../Dbconfig/DatabaseConfig");
 
 const NewsDeleteController = async (req, res, next) => {
   try {
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
     const id = req.params.id;
     const deleteValue = await NewsModel.findOneAndDelete({
       _id: new ObjectId(id),

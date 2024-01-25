@@ -4,15 +4,21 @@ const { NewsModel } = require("../../Dbconfig/DatabaseConfig");
 
 const newsPostController = async (req, res, next) => {
   try {
-    const { title, image, details } = req.body;
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
+    const { title, details, image, createdBy } = req.body;
     const dataValues = {
       date: new Date(),
       title,
       details,
+      createdBy,
+      email,
       image,
     };
     const publishNews = await NewsModel.insertOne(dataValues);
-    //
+
     return handleSuccess(res, {
       statusCode: 200,
       message: "নিউজটি সফলভাবে পাবলিশ করা হয়েছে",

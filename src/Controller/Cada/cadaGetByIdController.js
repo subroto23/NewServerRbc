@@ -4,7 +4,11 @@ const { Cada } = require("../../Dbconfig/DatabaseConfig");
 
 const cadaGetByIdController = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
+    const id = req?.params?.id;
     const dataValue = await Cada.findOne({ _id: new ObjectId(id) });
     return handleSuccess(res, {
       statusCode: 200,

@@ -4,6 +4,10 @@ const { titleModel } = require("../../Dbconfig/DatabaseConfig");
 
 const titlePostController = async (req, res, next) => {
   try {
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
     const { title } = req.body;
     const bodyDatas = {
       title,

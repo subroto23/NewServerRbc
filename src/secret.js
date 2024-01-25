@@ -15,6 +15,9 @@ const smtpPassword = process.env.SMTP_PASSWORD;
 
 const clintWebsiteAddress = process.env.CLIENT_WEBSITE_ADDRESS;
 
+const authAccessKey =
+  process.env.AUTH_ACCESS_KEY_TOKEN || "hdjhfehefaggfgdfgdgaaeue";
+
 const MAX_FILE_SIZE = 2097152;
 const ALLOWED_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png"];
 
@@ -24,6 +27,7 @@ const authLoginKey = process.env.AUTH_ACCESS_KEY_TOKEN || "fjfjffjjjfjfjf";
 module.exports = {
   PortNumber,
   mongodbUrl,
+  authAccessKey,
   userDefaultsImages,
   jsonWebTokensKey,
   smtpUserName,

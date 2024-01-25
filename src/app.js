@@ -7,7 +7,7 @@ const NewsRoute = require("./Router/NewsRoute/NewsRoute");
 const eventRoute = require("./Router/EventRoute/EventsRoute");
 const TittleRoute = require("./Router/Title Route/TitleRoute");
 const CadaRoute = require("./Router/CadaRoute/CadaCollectRoute");
-const path = require('path');
+const AuthRouter = require("./Router/UserAuth/UserAuthRoute");
 
 //MiddleWare
 app.use(cors());
@@ -15,14 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// //Users Routers Creating
-// app.use("/api/users", userRouter);
-
-// // //Auth Router
-// app.use("/auth", authRouter);
-
-// // //Sheed users
-// app.use("/api/sheeds/users", sheedRouter);
+//Auth Control
+app.use("/api", AuthRouter);
 
 // //Events Adding
 app.use("/events", eventRoute);

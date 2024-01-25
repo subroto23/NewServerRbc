@@ -4,17 +4,16 @@ const { EventsModel } = require("../../Dbconfig/DatabaseConfig");
 
 const eventsPostController = async (req, res, next) => {
   try {
-    const { title, subtitle, about, date } = req.body;
-    // let image = await req.file;
-    // if (image) {
-    //   image = await image.buffer.toString("base64");
-    // }
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
+    const { title, subtitle, date } = req.body;
     const eventDataPass = {
+      email,
       title,
       subtitle,
-      about,
       date,
-      // image,
     };
     const eventsSaveValue = await EventsModel.insertOne(eventDataPass);
     if (!eventsSaveValue) {

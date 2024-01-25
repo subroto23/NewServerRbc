@@ -25,14 +25,18 @@ const DueModel = client.db("rbcDatabase").collection("dues");
 const EventsModel = client.db("rbcDatabase").collection("events");
 const NewsModel = client.db("rbcDatabase").collection("news");
 const titleModel = client.db("rbcDatabase").collection("titles");
+const authUser = client.db("rbcDatabase").collection("auth");
+const monthcada = client.db("rbcDatabase").collection("monthcada");
 
 //Export MongoDb Collections
 module.exports = {
   userSchemaModel,
+  monthcada,
   Cada,
   DueModel,
   EventsModel,
   NewsModel,
   titleModel,
+  authUser,
   mongodbConnection,
 };

@@ -3,6 +3,10 @@ const { titleModel } = require("../../Dbconfig/DatabaseConfig");
 
 const titleDeleteController = async (req, res, next) => {
   try {
+    const email = req?.decoded?.email;
+    if (!email) {
+      return;
+    }
     const id = req.params.id;
     const deleteValue = await titleModel.findOneAndDelete({
       _id: new ObjectId(id),

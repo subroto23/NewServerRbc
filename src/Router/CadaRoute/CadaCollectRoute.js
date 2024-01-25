@@ -4,12 +4,13 @@ const cadaGetController = require("../../Controller/Cada/CadaGetController");
 const CadaUpdateController = require("../../Controller/Cada/CadaUpdateController");
 const cadaGetByIdController = require("../../Controller/Cada/cadaGetByIdController");
 const cadaDeleteById = require("../../Controller/Cada/CadaDeleteById");
+const VerifyToken = require("../../../Middleware/verifyToken");
 const CadaRoute = express.Router();
 
-CadaRoute.get("/", cadaGetController);
-CadaRoute.get("/:id", cadaGetByIdController);
-CadaRoute.post("/create", cadaPostController);
-CadaRoute.put("/update/:id", CadaUpdateController);
-CadaRoute.delete("/:id", cadaDeleteById);
+CadaRoute.get("/", VerifyToken, cadaGetController);
+CadaRoute.get("/:id", VerifyToken, cadaGetByIdController);
+CadaRoute.post("/create", VerifyToken, cadaPostController);
+CadaRoute.patch("/update/:id", VerifyToken, CadaUpdateController);
+CadaRoute.delete("/:id", VerifyToken, cadaDeleteById);
 
 module.exports = CadaRoute;

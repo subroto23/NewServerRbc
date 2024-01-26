@@ -5,9 +5,11 @@ const UsergetController = require("../../Controller/UserAuth/UsergetController")
 const UsergetIdController = require("../../Controller/UserAuth/UsergetIdController");
 const UserPatchController = require("../../Controller/UserAuth/UserPatchController");
 const UserDeleteController = require("../../Controller/UserAuth/UserDeleteController");
+const singleUsergetController = require("../../Controller/UserAuth/singleUsergetController");
 const AuthRouter = express.Router();
 
 AuthRouter.get("/auth/user", VerifyToken, UsergetController);
+AuthRouter.get("/auth/single/user", VerifyToken, singleUsergetController);
 AuthRouter.get("/auth/user/:id", VerifyToken, UsergetIdController);
 AuthRouter.post("/auth/create", UserAuthPostController);
 AuthRouter.patch("/auth/user/update/:id", VerifyToken, UserPatchController);

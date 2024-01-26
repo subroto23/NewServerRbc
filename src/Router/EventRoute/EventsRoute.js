@@ -10,7 +10,7 @@ const VerifyToken = require("../../../Middleware/verifyToken");
 const getEventUserController = require("../../Controller/EventsController/getEventUserController");
 const eventsDeleteController = require("../../Controller/EventsController/EventDeleteControler");
 
-eventRoute.get("/", VerifyToken, getEventController);
+eventRoute.get("/", getEventController);
 eventRoute.get("/user/event", VerifyToken, getEventUserController);
 eventRoute.post("/create", VerifyToken, eventsPostController);
 eventRoute.delete("/delete/:id", VerifyToken, eventsDeleteController);

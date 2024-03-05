@@ -8,12 +8,20 @@ const eventRoute = require("./Router/EventRoute/EventsRoute");
 const TittleRoute = require("./Router/Title Route/TitleRoute");
 const CadaRoute = require("./Router/CadaRoute/CadaCollectRoute");
 const AuthRouter = require("./Router/UserAuth/UserAuthRoute");
+const MonthCadaRoute = require("./Router/MonthCadaRoute/MonthCadaRoute");
+const pujaparbonRoute = require("./Router/Pujaparbon/PujaParbonRoute");
 
 //MiddleWare
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+//PujaParbo Route
+app.use("/puja/parbon", pujaparbonRoute);
+
+//MonthCada Route
+app.use("/api/month/cada", MonthCadaRoute);
 
 //Auth Control
 app.use("/api", AuthRouter);

@@ -27,6 +27,7 @@ const NewsModel = client.db("rbcDatabase").collection("news");
 const titleModel = client.db("rbcDatabase").collection("titles");
 const authUser = client.db("rbcDatabase").collection("auth");
 const monthcada = client.db("rbcDatabase").collection("monthcada");
+const pujaparbon = client.db("rbcDatabase").collection("pujaparbon");
 
 //Export MongoDb Collections
 module.exports = {
@@ -38,5 +39,6 @@ module.exports = {
   NewsModel,
   titleModel,
   authUser,
+  pujaparbon,
   mongodbConnection,
 };

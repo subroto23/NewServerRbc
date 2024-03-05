@@ -25,6 +25,7 @@ const MonthCadaAdminGetController = async (req, res) => {
 
     // Previous month Values Getiing
     const updatedResult = previousMonthGenerator(result);
+
     //Client Response Send
     res.status(200).send(updatedResult);
   } catch (error) {

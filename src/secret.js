@@ -21,6 +21,9 @@ const authAccessKey =
 const MAX_FILE_SIZE = 2097152;
 const ALLOWED_FILE_TYPES = ["image/jpg", "image/jpeg", "image/png"];
 
+//
+const smtpPasswordLatest = process.env.SMTP_PASSWORD_EMAIL_LATEST;
+const userEmail = process.env.USER_EMAIL;
 //Auth Key
 
 const authLoginKey = process.env.AUTH_ACCESS_KEY_TOKEN || "fjfjffjjjfjfjf";
@@ -36,4 +39,6 @@ module.exports = {
   MAX_FILE_SIZE,
   ALLOWED_FILE_TYPES,
   authLoginKey,
+  smtpPasswordLatest,
+  userEmail,
 };

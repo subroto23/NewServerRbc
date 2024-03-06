@@ -10,7 +10,7 @@ const CadaRoute = require("./Router/CadaRoute/CadaCollectRoute");
 const AuthRouter = require("./Router/UserAuth/UserAuthRoute");
 const MonthCadaRoute = require("./Router/MonthCadaRoute/MonthCadaRoute");
 const pujaparbonRoute = require("./Router/Pujaparbon/PujaParbonRoute");
-
+const smsSendRoute = require("../schedulejob/EmailSendingRoute");
 //MiddleWare
 app.use(cors());
 app.use(express.json());
@@ -40,5 +40,8 @@ app.use("/due/details", DueRoute);
 
 // //Title Routes
 app.use("/title/heading", TittleRoute);
+
+//Event Send Sms
+app.use("/api/v1/sms", smsSendRoute);
 
 module.exports = app;

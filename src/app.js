@@ -11,6 +11,8 @@ const AuthRouter = require("./Router/UserAuth/UserAuthRoute");
 const MonthCadaRoute = require("./Router/MonthCadaRoute/MonthCadaRoute");
 const pujaparbonRoute = require("./Router/Pujaparbon/PujaParbonRoute");
 const smsSendRoute = require("../schedulejob/EmailSendingRoute");
+const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute");
+
 //MiddleWare
 app.use(cors());
 app.use(express.json());
@@ -22,6 +24,9 @@ app.use("/puja/parbon", pujaparbonRoute);
 
 //MonthCada Route
 app.use("/api/month/cada", MonthCadaRoute);
+
+//notification
+app.use("/api/v1", notificaionRoute);
 
 //Auth Control
 app.use("/api", AuthRouter);

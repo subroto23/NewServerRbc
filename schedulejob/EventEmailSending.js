@@ -6,12 +6,12 @@ const { EventsModel, authUser } = require("../src/Dbconfig/DatabaseConfig");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
 
 const EventsSendSms = async (req, res) => {
-  const currentDate = moment().format("YYYY-MM-DD");
+  console.log(req.body);
   // Data Getting
   const eventsData = await EventsModel.aggregate([
     {
       $match: {
-        date: { $gte: currentDate },
+        date: { $gt: moment().format("YYYY-MM-DD") },
       },
     },
     {
@@ -52,6 +52,25 @@ const EventsSendSms = async (req, res) => {
     .toArray();
 
   const receviewEmails = eventReceiverEmail[0]?.allEmails?.join(",");
+
+  const dateObject = new Date(eventsData[0]?.date);
+
+  // Get the day of the week (Sunday is 0 and Saturday is 6)
+  const dayOfWeek = dateObject.getDay();
+
+  // Array of Bengali day names
+  const bengaliDayNames = [
+    "রবিবার",
+    "সোমবার",
+    "মঙ্গলবার",
+    "বুধবার",
+    "বৃহস্পতিবার",
+    "শুক্রবার",
+    "শনিবার",
+  ];
+
+  // Get the Bengali day name
+  const bengaliDayName = bengaliDayNames[dayOfWeek];
 
   //Send Schedule SMS
   const transporter = nodemailer.createTransport(
@@ -132,7 +151,9 @@ const EventsSendSms = async (req, res) => {
         <!-- Header -->
         <tr>
           <td class="header">
-            <h1>${eventsData[0]?.date} তারিখে  ${eventsData[0]?.title}</h1>
+            <h1>${eventsData[0]?.date} তারিখ রোজ ${bengaliDayName} ${
+      eventsData[0]?.title
+    }</h1>
             <p>${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}</p>
           </td>
         </tr>
@@ -141,8 +162,9 @@ const EventsSendSms = async (req, res) => {
         <tr>
           <td class="body">
             <p>প্রিয়,</p>
+            <p>${req?.body?.text}</p>
             <p>রূপসী বাংলা ক্লাবের পক্ষ থেকে আপনাকে জানাই আন্তরিক শুভেচ্ছে।আপনার অবগতির জন্য জানানো যাচ্ছে যে,রূপসী বাংলা ক্লাবের ওয়েবসাইটের মাধ্যমে ঘরে বসেই যেকোনো তথ্য আপনি জানতে পারবেন।</p>
-               <p>rরূপসী বাংলা ক্লাবের ওয়েবসাইটে প্রবেশ করে জানতে পারবেন বিগত সালের পূজা বাবদ আয়/ব্যায় , আপনার পূজার চাঁদা,সামনে কি অনুষ্ঠান আসিতেছে তার দিনক্ষন সহ আরো অনেক কিছু।</p>
+               <p>রূপসী বাংলা ক্লাবের ওয়েবসাইটে প্রবেশ করে জানতে পারবেন বিগত সালের পূজা বাবদ আয়/ব্যায় , আপনার পূজার চাঁদা,সামনে কি অনুষ্ঠান আসিতেছে তার দিনক্ষন সহ আরো অনেক কিছু।</p>
             <p>এখনি ঘুরে আসুন আমাদের ওয়েবসাইটে<br><a target="_blank" href="https://rbcweb.vercel.app">এখানে চাপ দিন</a></p>
           </td>
         </tr>
@@ -159,7 +181,6 @@ const EventsSendSms = async (req, res) => {
     </html>
         `,
   };
-
   return await transporter
     .sendMail(mailOptions)
     .then(() => {

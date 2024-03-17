@@ -144,8 +144,8 @@ const MonthCadaDueSms = async (req, res) => {
           <tr>
             <td class="body">
               <p>প্রিয় ${data?.name},</p>
+              <p>${req?.body?.text}</p>
               <h1>বকেয়া টেবিল</h1>
-
               <table id="customers">
                 <tr>
                   <th>শুরু</th>

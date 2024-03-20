@@ -72,7 +72,6 @@ const sendingMail = async (payload, receiverEmail) => {
       }
     }
   </style>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -103,34 +102,32 @@ const sendingMail = async (payload, receiverEmail) => {
     </tr>
   </table>
 
-  <div class="font-sans my-4">
-      <div class="bg-gray-200 p-4 text-center">
-        <div class="border-b border-black">
-          <h1 class="text-xl font-bold my-1">সুব্রত দাস</h1>
-          <p class="text-sm mb-2">প্রচার-সম্পাদক | <a href="https://portfolio-lovat-alpha-41.vercel.app/" class="text-blue-500">আরো জানুন</a></p>
+  <div style="font-family: Arial, sans-serif; margin-top: 10px; margin-bottom: 10px;">
+    <div style="background-color: #edf2f7; padding: 1rem; text-align: center;">
+        <div style="border-bottom: 1px solid #000;">
+            <h1 style="font-size: 1.25rem; font-weight: bold; margin-top: 0.25rem; margin-bottom: 0.25rem;">সুব্রত দাস</h1>
+            <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">প্রচার-সম্পাদক | <a href="https://portfolio-lovat-alpha-41.vercel.app/" style="color: #3b82f6;">আরো জানুন</a></p>
         </div>
-        <div class="flex items-center">
-          <div>
-            <img src="https://imgbb.host/images/WXse.png" alt="Photo" class="mx-auto m-4 w-52" />
-          </div>
-          <div>
-          <ul class="text-left text-sm">
-            <li>ই-মেইল: <a href="mailto:subroto23das@gmail.com" class="text-blue-500">subroto23das@gmail.com</a></li>
-            <li>মোবাইল: +৮৮ ০১৫ ২১৪০ ৯১৫৫</li>
-            <li>ঠিকানা: কাদিরদী,বোয়ালমারী, ফরিদপুর,, পোস্টঃ ৭৮০১</li>
-            <li class="flex gap-4">
-              যোগাযোগ:
-              <a href="https://www.facebook.com/subroto.das.568847/" class="text-blue-500">ফেসবুক</a>
-              <a href="https://www.linkedin.com/in/subroto-das-94b0672b9/" class="text-blue-500">লিংকডইন</a>
-            </li>
-          </ul>
+        <div style="display: flex; align-items: center;">
+            <div>
+                <img src="https://imgbb.host/images/WXse.png" alt="Photo" style="margin-left: auto; margin-right: auto; margin: 1rem; width: 13rem;" />
+            </div>
+            <div>
+                <ul style="text-align: left; font-size: 0.875rem;">
+                    <li>ই-মেইল: <a href="mailto:subroto23das@gmail.com" style="color: #3b82f6;">subroto23das@gmail.com</a></li>
+                    <li>মোবাইল: +৮৮ ০১৫ ২১৪০ ৯১৫৫</li>
+                    <li>ঠিকানা: কাদিরদী,বোয়ালমারী, ফরিদপুর,, পোস্টঃ ৭৮০১</li>
+                    <li style="display: flex; gap: 1rem;">যোগাযোগ: <a href="https://www.facebook.com/subroto.das.568847/" style="color: #3b82f6;">ফেসবুক</a> <a href="https://www.linkedin.com/in/subroto-das-94b0672b9/" style="color: #3b82f6;">লিংকডইন</a></li>
+                </ul>
+            </div>
         </div>
-      </div>
-      <div class="mt-4 bg-gray-300 p-4 text-center">
-        <p class="text-sm">'রূপসী বাংলা ক্লাব " এর তথ্য প্রযুক্তি বিষয়ক যেকোনো ধরনের পরামর্শ কিংবা অভিযোগের জন্য যোগাযোগ করুন সোম থেকে রবিবার সকাল ৯ টা থেকে রাত ১০ টা পর্যন্ত।আপনার পরামর্শ কিংবা অভিযোগ আমরা সন্মানের সাথে গ্রহণ করবো।ধন্যবাদ।</p>
-      </div>
-         <img src="https://imgbb.host/images/WiSQ.png" alt="Photo" class="mx-auto  w-full rounded-md" />
+        <div style="background-color: #e2e8f0; padding: 1rem; text-align: center; margin-top: 1rem; border-radius: 0.375rem;">
+            <p style="font-size: 0.875rem;">'রূপসী বাংলা ক্লাব " এর তথ্য প্রযুক্তি বিষয়ক যেকোনো ধরনের পরামর্শ কিংবা অভিযোগের জন্য যোগাযোগ করুন সোম থেকে রবিবার সকাল ৯ টা থেকে রাত ১০ টা পর্যন্ত। আপনার পরামর্শ কিংবা অভিযোগ আমরা সন্মানের সাথে গ্রহণ করবো। ধন্যবাদ।</p>
+        </div>
     </div>
+       <img src="https://imgbb.host/images/WiSQ.png" alt="Photo" style="display: block; margin-left: auto; margin-right: auto; width: 100%; max-width: 100%;" />
+      
+</div>
 
 </body>
 

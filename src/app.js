@@ -12,6 +12,7 @@ const MonthCadaRoute = require("./Router/MonthCadaRoute/MonthCadaRoute");
 const pujaparbonRoute = require("./Router/Pujaparbon/PujaParbonRoute");
 const smsSendRoute = require("../schedulejob/EmailSendingRoute");
 const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute");
+const bannerRouter = require("./Router/Banner/BannerRoute");
 
 //MiddleWare
 app.use(cors());
@@ -48,5 +49,8 @@ app.use("/title/heading", TittleRoute);
 
 //Event Send Sms
 app.use("/api/v1/sms", smsSendRoute);
+
+//Banner Adding
+app.use("/api/v1", bannerRouter);
 
 module.exports = app;

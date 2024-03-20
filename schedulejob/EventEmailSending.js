@@ -6,7 +6,6 @@ const { EventsModel, authUser } = require("../src/Dbconfig/DatabaseConfig");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
 
 const EventsSendSms = async (req, res) => {
-  console.log(req.body);
   // Data Getting
   const eventsData = await EventsModel.aggregate([
     {
@@ -51,7 +50,8 @@ const EventsSendSms = async (req, res) => {
     ])
     .toArray();
 
-  const receviewEmails = eventReceiverEmail[0]?.allEmails?.join(",");
+  // const receviewEmails = eventReceiverEmail[0]?.allEmails?.join(",");
+  const receviewEmails = eventReceiverEmail[0]?.allEmails;
 
   const dateObject = new Date(eventsData[0]?.date);
 
@@ -73,23 +73,24 @@ const EventsSendSms = async (req, res) => {
   const bengaliDayName = bengaliDayNames[dayOfWeek];
 
   //Send Schedule SMS
-  const transporter = nodemailer.createTransport(
-    smtpTransport({
-      service: "gmail",
-      host: "smtp.gmail.com",
-      auth: {
-        user: `${userEmail}`,
-        pass: `${smtpPasswordLatest}`,
-      },
-    })
-  );
+  receviewEmails?.map(async (receiveEmail) => {
+    const transporter = nodemailer.createTransport(
+      smtpTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        auth: {
+          user: `${userEmail}`,
+          pass: `${smtpPasswordLatest}`,
+        },
+      })
+    );
 
-  const mailOptions = {
-    from: `rupashi.bangla.club@gmail.com`,
-    to: `${receviewEmails}`,
-    bcc: `${receviewEmails}`,
-    subject: `${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}`,
-    html: `
+    const mailOptions = {
+      from: `rupashi.bangla.club@gmail.com`,
+      to: `${receiveEmail}`,
+      bcc: `${receiveEmail}`,
+      subject: `${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}`,
+      html: `
         <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -152,8 +153,8 @@ const EventsSendSms = async (req, res) => {
         <tr>
           <td class="header">
             <h1>${eventsData[0]?.date} তারিখ রোজ ${bengaliDayName} ${
-      eventsData[0]?.title
-    }</h1>
+        eventsData[0]?.title
+      }</h1>
             <p>${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}</p>
           </td>
         </tr>
@@ -168,28 +169,56 @@ const EventsSendSms = async (req, res) => {
             <p>এখনি ঘুরে আসুন আমাদের ওয়েবসাইটে<br><a target="_blank" href="https://rbcweb.vercel.app">এখানে চাপ দিন</a></p>
           </td>
         </tr>
-
         <!-- Footer -->
         <tr>
           <td class="footer">
             <p>রূপসী বাংলা ক্লাব | তথ্য-প্রযুক্তি বিভাগ </p>
           </td>
         </tr>
+        <tr>
+            <td>
+            <div style="font-family: Arial, sans-serif; margin-top: 40px; margin-bottom: 10px;">
+            <div style="padding: 1rem; text-align: center;">
+                <div style="border-bottom: 1px solid #000;">
+                    <h1 style="font-size: 1.25rem; font-weight: bold; margin-top: 0.25rem; margin-bottom: 0.25rem;">সুব্রত দাস</h1>
+                    <p style="font-size: 0.875rem; margin-bottom: 0.5rem;">প্রচার-সম্পাদক | <a href="https://portfolio-lovat-alpha-41.vercel.app/" style="color: #3b82f6;">আরো জানুন</a></p>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <div>
+                        <img src="https://imgbb.host/images/WXse.png" alt="Photo" style="margin-left: auto; margin-right: auto; margin: 1rem; width: 13rem;" />
+                    </div>
+                    <div>
+                        <ul style="text-align: left; font-size: 0.875rem;">
+                            <li>ই-মেইল: <a href="mailto:subroto23das@gmail.com" style="color: #3b82f6;">subroto23das@gmail.com</a></li>
+                            <li>মোবাইল: +৮৮ ০১৫ ২১৪০ ৯১৫৫</li>
+                            <li>ঠিকানা: কাদিরদী,বোয়ালমারী, ফরিদপুর,, পোস্টঃ ৭৮০১</li>
+                            <li>যোগাযোগঃ 
+                            <a href="https://www.linkedin.com/in/subroto-das-94b0672b9/" style="color: #3b82f6;">www.linkedin.com</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="background-color: #e2e8f0; padding: 1rem; text-align: center; margin-top: 1rem; border-radius: 0.375rem;">
+                    <p style="font-size: 0.875rem;">'রূপসী বাংলা ক্লাব " এর তথ্য প্রযুক্তি বিষয়ক যেকোনো ধরনের পরামর্শ কিংবা অভিযোগের জন্য যোগাযোগ করুন সোম থেকে শুক্র  সকাল ৯ টা থেকে রাত ১০ টা পর্যন্ত। আপনার পরামর্শ কিংবা অভিযোগ আমরা সন্মানের সাথে গ্রহণ করবো। ধন্যবাদ।</p>
+                </div>
+            </td>
+          </tr>
       </table>
     </body>
 
     </html>
         `,
-  };
-  return await transporter
-    .sendMail(mailOptions)
-    .then(() => {
-      return res
-        .status(200)
-        .send({ success: true, message: "Email Send Successfully" });
-    })
-    .catch((err) =>
-      res.status(200).send({ success: false, message: "Email Not Send " })
-    );
+    };
+    await transporter
+      .sendMail(mailOptions)
+      .then(() => {
+        return res
+          .status(200)
+          .send({ success: true, message: "Email Send Successfully" });
+      })
+      .catch((err) =>
+        res.status(200).send({ success: false, message: "Email Not Send " })
+      );
+  });
 };
 module.exports = EventsSendSms;

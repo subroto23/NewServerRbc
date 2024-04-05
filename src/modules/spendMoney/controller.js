@@ -15,7 +15,7 @@ const createSpendController = async (req, res, next) => {
 const getAllSpendController = async (req, res, next) => {
   try {
     const result = await spendCollection.find().toArray();
-    res.status(200).send(result);
+    res.status(200).send(result.reverse());
   } catch (error) {
     console.log(error);
   }

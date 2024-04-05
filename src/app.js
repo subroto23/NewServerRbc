@@ -55,8 +55,8 @@ app.use("/api/v1/sms", smsSendRoute);
 app.use("/api/v1", bannerRouter);
 
 //Earn Routes
-app.use("api/v1/earns", earnRoutes);
+app.use("/api/v1/earns", earnRoutes);
 
 //Spend Routes
-app.use("api/v1/spends", spendRoutes);
+app.use("/api/v1/spends", spendRoutes);
 module.exports = app;

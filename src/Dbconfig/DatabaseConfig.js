@@ -30,6 +30,8 @@ const monthcada = client.db("rbcDatabase").collection("monthcada");
 const pujaparbon = client.db("rbcDatabase").collection("pujaparbon");
 const notification = client.db("rbcDatabase").collection("notification");
 const bannerCollection = client.db("rbcDatabase").collection("banner");
+const earnsCollection = client.db("rbcDatabase").collection("earns");
+const spendCollection = client.db("rbcDatabase").collection("spend");
 
 //Export MongoDb Collections
 module.exports = {
@@ -44,5 +46,7 @@ module.exports = {
   pujaparbon,
   notification,
   bannerCollection,
+  earnsCollection,
+  spendCollection,
   mongodbConnection,
 };

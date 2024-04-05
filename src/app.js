@@ -13,6 +13,8 @@ const pujaparbonRoute = require("./Router/Pujaparbon/PujaParbonRoute");
 const smsSendRoute = require("../schedulejob/EmailSendingRoute");
 const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute");
 const bannerRouter = require("./Router/Banner/BannerRoute");
+const earnRoutes = require("./modules/earnMoney/route");
+const spendRoutes = require("./modules/spendMoney/route");
 //MiddleWare
 app.use(cors());
 app.use(express.json());
@@ -52,4 +54,9 @@ app.use("/api/v1/sms", smsSendRoute);
 //Banner Adding
 app.use("/api/v1", bannerRouter);
 
+//Earn Routes
+app.use("api/v1/earns", earnRoutes);
+
+//Spend Routes
+app.use("api/v1/spends", spendRoutes);
 module.exports = app;

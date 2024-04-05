@@ -13,7 +13,6 @@ const pujaparbonRoute = require("./Router/Pujaparbon/PujaParbonRoute");
 const smsSendRoute = require("../schedulejob/EmailSendingRoute");
 const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute");
 const bannerRouter = require("./Router/Banner/BannerRoute");
-
 //MiddleWare
 app.use(cors());
 app.use(express.json());

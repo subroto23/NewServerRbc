@@ -2,7 +2,6 @@ const createHttpError = require("http-errors");
 const { handleSuccess } = require("../../Services/SuccessError");
 const { ObjectId } = require("mongodb");
 const { NewsModel } = require("../../Dbconfig/DatabaseConfig");
-const Jimp = require("jimp");
 
 const newsIdBasedController = async (req, res, next) => {
   try {

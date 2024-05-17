@@ -54,10 +54,8 @@ const EventsSendSms = async (req, res) => {
   const receviewEmails = eventReceiverEmail[0]?.allEmails;
 
   const dateObject = new Date(eventsData[0]?.date);
-
   // Get the day of the week (Sunday is 0 and Saturday is 6)
   const dayOfWeek = dateObject.getDay();
-
   // Array of Bengali day names
   const bengaliDayNames = [
     "রবিবার",
@@ -104,7 +102,20 @@ const EventsSendSms = async (req, res) => {
           padding: 0;
           background-color: #f4f4f4;
         }
-
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #000099;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          color:#FFFF;
+          margin:30px 0px;
+      }
+      #countdown {
+          font-size: 20px;
+          text-align: center;
+      }
         table {
           max-width: 600px;
           margin: 0 auto;
@@ -158,12 +169,14 @@ const EventsSendSms = async (req, res) => {
             <p>${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}</p>
           </td>
         </tr>
-
+        <tr>
+        </tr>
         <!-- Body -->
         <tr>
           <td class="body">
             <p>প্রিয়,</p>
-            <p>${req?.body?.text}</p>
+            ${req?.body?.text ? `<p>${req?.body?.text}</p>` : ""}
+          
             <p>রূপসী বাংলা ক্লাবের পক্ষ থেকে আপনাকে জানাই আন্তরিক শুভেচ্ছে।আপনার অবগতির জন্য জানানো যাচ্ছে যে,রূপসী বাংলা ক্লাবের ওয়েবসাইটের মাধ্যমে ঘরে বসেই যেকোনো তথ্য আপনি জানতে পারবেন।</p>
                <p>রূপসী বাংলা ক্লাবের ওয়েবসাইটে প্রবেশ করে জানতে পারবেন বিগত সালের পূজা বাবদ আয়/ব্যায় , আপনার পূজার চাঁদা,সামনে কি অনুষ্ঠান আসিতেছে তার দিনক্ষন সহ আরো অনেক কিছু।</p>
             <p>এখনি ঘুরে আসুন আমাদের ওয়েবসাইটে<br><a target="_blank" href="https://rbcweb.vercel.app">এখানে চাপ দিন</a></p>
@@ -205,20 +218,23 @@ const EventsSendSms = async (req, res) => {
           </tr>
       </table>
     </body>
-
     </html>
         `,
     };
-    await transporter
-      .sendMail(mailOptions)
-      .then(() => {
-        return res
-          .status(200)
-          .send({ success: true, message: "Email Send Successfully" });
-      })
-      .catch((err) =>
-        res.status(200).send({ success: false, message: "Email Not Send " })
-      );
+    try {
+      await transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          return res
+            .status(200)
+            .send({ success: true, message: "Email Send Successfully" });
+        })
+        .catch((err) =>
+          res.status(200).send({ success: false, message: "Email Not Send " })
+        );
+    } catch (error) {
+      console.log(error);
+    }
   });
 };
 module.exports = EventsSendSms;

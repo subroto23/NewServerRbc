@@ -15,6 +15,9 @@ const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute")
 const bannerRouter = require("./Router/Banner/BannerRoute");
 const earnRoutes = require("./modules/earnMoney/route");
 const spendRoutes = require("./modules/spendMoney/route");
+const cron = require("node-cron");
+const enventSmsSendAutometic = require("../schedulejob/eventSmsSendAutometic");
+const monthCadaAutometic = require("../schedulejob/monthCadaAutometic");
 //MiddleWare
 app.use(cors());
 app.use(express.json());
@@ -53,6 +56,22 @@ app.use("/api/v1/sms", smsSendRoute);
 
 //Banner Adding
 app.use("/api/v1", bannerRouter);
+
+//
+cron.schedule("0 6 */2 * *", () => {
+  try {
+    enventSmsSendAutometic();
+  } catch (error) {
+    console.log("Not Deleted");
+  }
+});
+cron.schedule("0 6 */5 * *", () => {
+  try {
+    monthCadaAutometic();
+  } catch (error) {
+    console.log("Not Deleted");
+  }
+});
 
 //Earn Routes
 app.use("/api/v1/earns", earnRoutes);

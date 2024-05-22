@@ -1,34 +1,63 @@
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
+const calculateTotalMonths = require("../src/utlis/calculateTotalMonths");
+const { monthcada } = require("../src/Dbconfig/DatabaseConfig");
+const previousMonthGenerator = require("../src/utlis/PreviousMonthGenerator");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
 
-const MonthCadaDueSms = async (req, res) => {
-  const data = req.body;
+const monthCadaAutometic = async () => {
   try {
-    //Send Schedule SMS
-    const transporter = nodemailer.createTransport(
-      smtpTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        auth: {
-          user: `${userEmail}`,
-          pass: `${smtpPasswordLatest}`,
+    const totalMonths = calculateTotalMonths();
+    const result = await monthcada
+      .aggregate([
+        {
+          $project: {
+            name: 1,
+            email: 1,
+            monthCount: {
+              $abs: { $subtract: [{ $size: "$month" }, totalMonths] },
+            },
+          },
         },
-      })
-    );
+        {
+          $match: {
+            monthCount: { $gt: 0 },
+          },
+        },
+      ])
+      .toArray();
 
-    const mailOptions = {
-      from: `${userEmail}`,
-      to: `${data?.email}`,
-      bcc: `${data?.email}`,
-      subject: `${data?.subject}`,
-      html: `
+    // Previous month Values Getiing
+    const updatedResult = previousMonthGenerator(result);
+
+    updatedResult.map(async (data) => {
+      if (data?.email === "roygourango140@gmail.com") {
+        return;
+      }
+      //Send Schedule SMS
+      const transporter = nodemailer.createTransport(
+        smtpTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          auth: {
+            user: `${userEmail}`,
+            pass: `${smtpPasswordLatest}`,
+          },
+        })
+      );
+
+      const mailOptions = {
+        from: `${userEmail}`,
+        to: `${data?.email}`,
+        bcc: `${data?.email}`,
+        subject: `মাসিক চাঁদা বকেয়ার হিসাব`,
+        html: `
       <!DOCTYPE html>
       <html lang="en">
       <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${data?.subject}</title>
+        <title>মাসিক চাঁদা বকেয়ার হিসাব</title>
         <style>
           body {
             font-family: 'Arial', sans-serif;
@@ -106,15 +135,33 @@ const MonthCadaDueSms = async (req, res) => {
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>${data?.title}</h1>
+              <h1>আপনার মাসিক চাঁদা ${data?.monthCount} মাস বকেয়া</h1>
+              <p>দয়া করে ${
+                Number(data?.monthCount) * 50
+              } /= দ্রুত প্রদান করুন</p>
             </td>
           </tr>
       
           <!-- Body -->
           <tr>
             <td class="body">
-              <p>${data?.text}</p>
-              </br>>
+              <p>প্রিয় ${data?.name},</p>
+              <h1>বকেয়া টেবিল</h1>
+              <table id="customers">
+                <tr>
+                  <th>শুরু মাস</th>
+                  <th>শেষ মাস</th>
+                  <th>মোট বকেয়া মাস</th>
+                  <th>মোট টাকা</th>
+                </tr>
+                <tr>
+                  <td>${data?.prevMonthName} থেকে</td>
+                  <td>${data?.currMonthName}</td>
+                  <td>${data?.monthCount}</td>
+                  <td>${Number(data?.monthCount) * 50} /= </td>
+                </tr>
+              </table>
+              </br>
             </td>
           </tr>
           <!-- Footer -->
@@ -154,20 +201,12 @@ const MonthCadaDueSms = async (req, res) => {
         </table>
       </body>
       </html>`,
-    };
+      };
 
-    return await transporter
-      .sendMail(mailOptions)
-      .then(() => {
-        return res
-          .status(200)
-          .send({ success: true, message: "Email Send Successfully" });
-      })
-      .catch((err) =>
-        res.status(200).send({ success: false, message: "Email Not Send " })
-      );
+      return await transporter.sendMail(mailOptions);
+    });
   } catch (error) {
     console.log(error);
   }
 };
-module.exports = MonthCadaDueSms;
+module.exports = monthCadaAutometic;

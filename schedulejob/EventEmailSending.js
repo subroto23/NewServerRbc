@@ -1,188 +1,121 @@
-// const cron = require("node-cron");
-const moment = require("moment");
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
-const { EventsModel, authUser } = require("../src/Dbconfig/DatabaseConfig");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
 
 const EventsSendSms = async (req, res) => {
-  // Data Getting
-  const eventsData = await EventsModel.aggregate([
-    {
-      $match: {
-        date: { $gt: moment().format("YYYY-MM-DD") },
-      },
-    },
-    {
-      $sort: {
-        date: 1,
-      },
-    },
-    {
-      $limit: 1,
-    },
-    {
-      $project: {
-        _id: 0,
-        email: 1,
-        title: 1,
-        subtitle: 1,
-        date: 1,
-      },
-    },
-  ]).toArray();
-
-  //Events User Email
-  const eventReceiverEmail = await authUser
-    .aggregate([
-      {
-        $group: {
-          _id: null,
-          allEmails: { $push: "$email" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          allEmails: 1,
-        },
-      },
-    ])
-    .toArray();
-
-  // const receviewEmails = eventReceiverEmail[0]?.allEmails?.join(",");
-  const receviewEmails = eventReceiverEmail[0]?.allEmails;
-
-  const dateObject = new Date(eventsData[0]?.date);
-  // Get the day of the week (Sunday is 0 and Saturday is 6)
-  const dayOfWeek = dateObject.getDay();
-  // Array of Bengali day names
-  const bengaliDayNames = [
-    "রবিবার",
-    "সোমবার",
-    "মঙ্গলবার",
-    "বুধবার",
-    "বৃহস্পতিবার",
-    "শুক্রবার",
-    "শনিবার",
-  ];
-
-  // Get the Bengali day name
-  const bengaliDayName = bengaliDayNames[dayOfWeek];
-
+  const data = req.body;
   //Send Schedule SMS
-  receviewEmails?.map(async (receiveEmail) => {
-    const transporter = nodemailer.createTransport(
-      smtpTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        auth: {
-          user: `${userEmail}`,
-          pass: `${smtpPasswordLatest}`,
-        },
-      })
-    );
+  const transporter = nodemailer.createTransport(
+    smtpTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      auth: {
+        user: `${userEmail}`,
+        pass: `${smtpPasswordLatest}`,
+      },
+    })
+  );
 
-    const mailOptions = {
-      from: `rupashi.bangla.club@gmail.com`,
-      to: `${receiveEmail}`,
-      bcc: `${receiveEmail}`,
-      subject: `${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}`,
-      html: `
-        <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}</title>
-      <style>
-        body {
-          font-family: 'Arial', sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f4f4f4;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 20px;
-          background-color: #000099;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-          color:#FFFF;
-          margin:30px 0px;
-      }
-      #countdown {
-          font-size: 20px;
-          text-align: center;
-      }
-        table {
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        /* Header Styles */
-        .header {
-          background-color: #3498db;
-          color: #ffffff;
-          text-align: center;
-          padding: 20px;
-        }
-
-        /* Body Styles */
-        .body {
-          padding: 20px;
-          background-color: #ffffff;
-        }
-
-        /* Footer Styles */
-        .footer {
-          text-align: center;
-          padding: 10px;
-          background-color: #3498db;
-          color: #ffffff;
-        }
-
-        /* Responsive Styles */
-        @media only screen and (max-width: 600px) {
+  const mailOptions = {
+    from: `rupashi.bangla.club@gmail.com`,
+    to: `${data?.email}`,
+    bcc: `${data?.email}`,
+    subject: `${data?.subject}`,
+    html: `  <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${data?.subject}</title>
+        <style>
+          body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+          }
+      
           table {
+            max-width: 600px;
+            margin: 0 auto;
+          }
+      
+          /* Header Styles */
+          .header {
+            background-color: #3498db;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+          }
+      
+          /* Body Styles */
+          .body {
+            padding: 20px;
+            background-color: #ffffff;
+          }
+      
+          /* Footer Styles */
+          .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #3498db;
+            color: #ffffff;
+          }
+      
+          /* Responsive Styles */
+          @media only screen and (max-width: 600px) {
+            table {
+              width: 100%;
+            }
+      
+            .header,
+            .body,
+            .footer {
+              padding: 10px;
+            }
+          }
+          #customers {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
             width: 100%;
           }
-
-          .header,
-          .body,
-          .footer {
-            padding: 10px;
-          }
-        }
-      </style>
-    </head>
-
-    <body>
-      <table>
-        <!-- Header -->
-        <tr>
-          <td class="header">
-            <h1>${eventsData[0]?.date} তারিখ রোজ ${bengaliDayName} ${
-        eventsData[0]?.title
-      }</h1>
-            <p>${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}</p>
-          </td>
-        </tr>
-        <tr>
-        </tr>
-        <!-- Body -->
-        <tr>
-          <td class="body">
-            <p>প্রিয়,</p>
-            ${req?.body?.text ? `<p>${req?.body?.text}</p>` : ""}
           
-            <p>রূপসী বাংলা ক্লাবের পক্ষ থেকে আপনাকে জানাই আন্তরিক শুভেচ্ছে।আপনার অবগতির জন্য জানানো যাচ্ছে যে,রূপসী বাংলা ক্লাবের ওয়েবসাইটের মাধ্যমে ঘরে বসেই যেকোনো তথ্য আপনি জানতে পারবেন।</p>
-               <p>রূপসী বাংলা ক্লাবের ওয়েবসাইটে প্রবেশ করে জানতে পারবেন বিগত সালের পূজা বাবদ আয়/ব্যায় , আপনার পূজার চাঁদা,সামনে কি অনুষ্ঠান আসিতেছে তার দিনক্ষন সহ আরো অনেক কিছু।</p>
-            <p>এখনি ঘুরে আসুন আমাদের ওয়েবসাইটে<br><a target="_blank" href="https://rbcweb.vercel.app">এখানে চাপ দিন</a></p>
-          </td>
-        </tr>
-        <!-- Footer -->
+          #customers td, #customers th {
+            border: 1px solid #ddd;
+            padding: 8px;
+          }
+          
+          #customers tr:nth-child(even){background-color: #f2f2f2;}
+          
+          #customers tr:hover {background-color: #ddd;}
+          
+          #customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+          }
+        </style>
+      </head>
+      
+      <body>
+        <table>
+          <!-- Header -->
+          <tr>
+            <td class="header">
+              <h1>${data?.title}</h1>
+            </td>
+          </tr>
+      
+          <!-- Body -->
+          <tr>
+            <td class="body">
+              <p>${data?.text}</p>
+              </br>>
+            </td>
+          </tr>
+          <!-- Footer -->
         <tr>
           <td class="footer">
             <p>রূপসী বাংলা ক্লাব | তথ্য-প্রযুক্তি বিভাগ </p>
@@ -216,25 +149,23 @@ const EventsSendSms = async (req, res) => {
                 </div>
             </td>
           </tr>
-      </table>
-    </body>
-    </html>
-        `,
-    };
-    try {
-      await transporter
-        .sendMail(mailOptions)
-        .then(() => {
-          return res
-            .status(200)
-            .send({ success: true, message: "Email Send Successfully" });
-        })
-        .catch((err) =>
-          res.status(200).send({ success: false, message: "Email Not Send " })
-        );
-    } catch (error) {
-      console.log(error);
-    }
-  });
+        </table>
+      </body>
+      </html>`,
+  };
+  try {
+    await transporter
+      .sendMail(mailOptions)
+      .then(() => {
+        return res
+          .status(200)
+          .send({ success: true, message: "Email Send Successfully" });
+      })
+      .catch((err) =>
+        res.status(200).send({ success: false, message: "Email Not Send " })
+      );
+  } catch (error) {
+    console.log(error);
+  }
 };
 module.exports = EventsSendSms;

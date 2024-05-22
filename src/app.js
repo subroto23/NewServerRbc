@@ -58,18 +58,18 @@ app.use("/api/v1/sms", smsSendRoute);
 app.use("/api/v1", bannerRouter);
 
 //
-cron.schedule("0 6 */2 * *", () => {
+cron.schedule("0 22 */2 * *", () => {
   try {
     enventSmsSendAutometic();
   } catch (error) {
-    console.log("Not Deleted");
+    console.log("Error Sending");
   }
 });
-cron.schedule("0 6 */5 * *", () => {
+cron.schedule("0 22 */10 * *", () => {
   try {
     monthCadaAutometic();
   } catch (error) {
-    console.log("Not Deleted");
+    console.log("Error Sending");
   }
 });
 

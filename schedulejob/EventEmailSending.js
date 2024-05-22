@@ -104,7 +104,7 @@ const EventsSendSms = async (req, res) => {
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>${data?.title}</h1>
+              <h1>${data?.subject}</h1>
             </td>
           </tr>
       
@@ -112,7 +112,7 @@ const EventsSendSms = async (req, res) => {
           <tr>
             <td class="body">
               <p>${data?.text}</p>
-              </br>>
+              </br>
             </td>
           </tr>
           <!-- Footer -->

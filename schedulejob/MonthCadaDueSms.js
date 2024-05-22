@@ -1,28 +1,50 @@
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
+const { authUser } = require("../src/Dbconfig/DatabaseConfig");
 
 const MonthCadaDueSms = async (req, res) => {
   const data = req.body;
   try {
-    //Send Schedule SMS
-    const transporter = nodemailer.createTransport(
-      smtpTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        auth: {
-          user: `${userEmail}`,
-          pass: `${smtpPasswordLatest}`,
+    //Events User Email
+    const eventReceiverEmail = await authUser
+      .aggregate([
+        {
+          $group: {
+            _id: null,
+            allEmails: { $push: "$email" },
+          },
         },
-      })
-    );
+        {
+          $project: {
+            _id: 0,
+            allEmails: 1,
+          },
+        },
+      ])
+      .toArray();
 
-    const mailOptions = {
-      from: `${userEmail}`,
-      to: `${data?.email}`,
-      bcc: `${data?.email}`,
-      subject: `${data?.subject}`,
-      html: `
+    const receviewEmails = eventReceiverEmail[0]?.allEmails;
+
+    receviewEmails.map(async (email) => {
+      //Send Schedule SMS
+      const transporter = nodemailer.createTransport(
+        smtpTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          auth: {
+            user: `${userEmail}`,
+            pass: `${smtpPasswordLatest}`,
+          },
+        })
+      );
+
+      const mailOptions = {
+        from: `${userEmail}`,
+        to: `${email}`,
+        bcc: `${email}`,
+        subject: `${data?.subject}`,
+        html: `
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -106,7 +128,7 @@ const MonthCadaDueSms = async (req, res) => {
           <!-- Header -->
           <tr>
             <td class="header">
-              <h1>${data?.title}</h1>
+              <h1>${data?.subject}</h1>
             </td>
           </tr>
       
@@ -114,7 +136,7 @@ const MonthCadaDueSms = async (req, res) => {
           <tr>
             <td class="body">
               <p>${data?.text}</p>
-              </br>>
+              </br>
             </td>
           </tr>
           <!-- Footer -->
@@ -154,18 +176,19 @@ const MonthCadaDueSms = async (req, res) => {
         </table>
       </body>
       </html>`,
-    };
+      };
 
-    return await transporter
-      .sendMail(mailOptions)
-      .then(() => {
-        return res
-          .status(200)
-          .send({ success: true, message: "Email Send Successfully" });
-      })
-      .catch((err) =>
-        res.status(200).send({ success: false, message: "Email Not Send " })
-      );
+      return await transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          return res
+            .status(200)
+            .send({ success: true, message: "Email Send Successfully" });
+        })
+        .catch((err) =>
+          res.status(200).send({ success: false, message: "Email Not Send " })
+        );
+    });
   } catch (error) {
     console.log(error);
   }

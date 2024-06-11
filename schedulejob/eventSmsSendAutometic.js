@@ -5,7 +5,7 @@ const smtpTransport = require("nodemailer-smtp-transport");
 const { EventsModel, authUser } = require("../src/Dbconfig/DatabaseConfig");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
 
-const enventSmsSendAutometic = async () => {
+const enventSmsSendAutometic = async (req, res) => {
   // Data Getting
   const eventsData = await EventsModel.aggregate([
     {
@@ -221,7 +221,9 @@ const enventSmsSendAutometic = async () => {
         `,
     };
     try {
-      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions).then(() => {
+        res.send({ message: "Email Send Success" });
+      });
     } catch (error) {
       console.log(error);
     }

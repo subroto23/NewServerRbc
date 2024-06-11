@@ -15,11 +15,9 @@ const EventsSendSms = async (req, res) => {
       },
     })
   );
-
   const mailOptions = {
-    from: `rupashi.bangla.club@gmail.com`,
+    from: `${userEmail}`,
     to: `${data?.email}`,
-    bcc: `${data?.email}`,
     subject: `${data?.subject}`,
     html: `  <!DOCTYPE html>
       <html lang="en">

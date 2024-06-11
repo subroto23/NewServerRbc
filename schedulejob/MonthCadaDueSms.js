@@ -27,6 +27,9 @@ const MonthCadaDueSms = async (req, res) => {
     const receviewEmails = eventReceiverEmail[0]?.allEmails;
 
     receviewEmails.map(async (email) => {
+      if (email === "roygourango140@gmail.com") {
+        return;
+      }
       //Send Schedule SMS
       const transporter = nodemailer.createTransport(
         smtpTransport({

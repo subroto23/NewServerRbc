@@ -1,11 +1,11 @@
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
-const calculateTotalMonths = require("../src/utlis/calculateTotalMonths");
-const { monthcada } = require("../src/Dbconfig/DatabaseConfig");
-const previousMonthGenerator = require("../src/utlis/PreviousMonthGenerator");
-const { userEmail, smtpPasswordLatest } = require("../src/secret");
+const calculateTotalMonths = require("../../src/utlis/calculateTotalMonths");
+const { monthcada } = require("../../src/Dbconfig/DatabaseConfig");
+const previousMonthGenerator = require("../../src/utlis/PreviousMonthGenerator");
+const { userEmail, smtpPasswordLatest } = require("../../src/secret");
 
-const monthCadaAutometic = async () => {
+const monthCadaAutometicSend = async (req, res) => {
   try {
     const totalMonths = calculateTotalMonths();
     const result = await monthcada
@@ -203,10 +203,16 @@ const monthCadaAutometic = async () => {
       </html>`,
       };
 
-      return await transporter.sendMail(mailOptions);
+      try {
+        await transporter.sendMail(mailOptions).then(() => {
+          return res.send({ message: "Message send successfully" });
+        });
+      } catch (error) {
+        console.log(error);
+      }
     });
   } catch (error) {
     console.log(error);
   }
 };
-module.exports = monthCadaAutometic;
+module.exports = monthCadaAutometicSend;

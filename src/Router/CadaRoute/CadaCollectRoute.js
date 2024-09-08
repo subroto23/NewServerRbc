@@ -7,7 +7,7 @@ const cadaDeleteById = require("../../Controller/Cada/CadaDeleteById");
 const VerifyToken = require("../../../Middleware/verifyToken");
 const CadaRoute = express.Router();
 
-CadaRoute.get("/", VerifyToken, cadaGetController);
+CadaRoute.get("/", cadaGetController);
 CadaRoute.get("/:id", VerifyToken, cadaGetByIdController);
 CadaRoute.post("/create", VerifyToken, cadaPostController);
 CadaRoute.patch("/update/:id", VerifyToken, CadaUpdateController);

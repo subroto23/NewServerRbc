@@ -17,6 +17,7 @@
     "mailgun.js": "^10.2.1",
     "moment": "^2.30.1",
     "mongodb": "^6.3.0",
+    "newserver": "file:",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.11",
     "nodemailer-mailgun-transport": "^2.1.5",

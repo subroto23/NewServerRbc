@@ -1,6 +1,6 @@
 const express = require("express");
 const EventsSendSms = require("./EventEmailSending");
-const MonthCadaDueSms = require("./MonthCadaDueSms");
+const MonthCadaDueSms = require("./allusersSendEmail");
 const enventSmsSendAutometic = require("./eventSmsSendAutometic");
 const monthCadaAutometicSend = require("./monthCadaAutoSma/monthCadaAutometic");
 const smsSendRoute = express.Router();

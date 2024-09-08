@@ -14,6 +14,13 @@ const createSpendController = async (req, res, next) => {
 //Get all Spend Values
 const getAllSpendController = async (req, res, next) => {
   try {
+    const query = req?.query;
+    if (query.search !== "") {
+      const result = await spendCollection
+        .find({ catagory: query?.search })
+        .toArray();
+      return res.status(200).send(result.reverse());
+    }
     const result = await spendCollection.find().toArray();
     res.status(200).send(result.reverse());
   } catch (error) {

@@ -31,9 +31,6 @@ const monthCadaAutometicSend = async (req, res) => {
     const updatedResult = previousMonthGenerator(result);
 
     updatedResult.map(async (data) => {
-      if (data?.email === "roygourango140@gmail.com") {
-        return;
-      }
       //Send Schedule SMS
       const transporter = nodemailer.createTransport(
         smtpTransport({

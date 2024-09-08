@@ -14,8 +14,15 @@ const createEarnController = async (req, res, next) => {
 //Get all Earn Values
 const getAllEarnController = async (req, res, next) => {
   try {
+    const query = req?.query;
+    if (query.search !== "") {
+      const result = await earnsCollection
+        .find({ catagory: query?.search })
+        .toArray();
+      return res.status(200).send(result.reverse());
+    }
     const result = await earnsCollection.find().toArray();
-    res.status(200).send(result.reverse());
+    return res.status(200).send(result.reverse());
   } catch (error) {
     console.log(error);
   }
@@ -24,7 +31,7 @@ const getAllEarnController = async (req, res, next) => {
 //Get Single Earn Values
 const getSingleEarnController = async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req?.params;
     const result = await earnsCollection.findOne({ _id: new ObjectId(id) });
     res.status(200).send(result);
   } catch (error) {

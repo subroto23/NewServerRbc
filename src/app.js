@@ -15,9 +15,10 @@ const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute")
 const bannerRouter = require("./Router/Banner/BannerRoute");
 const earnRoutes = require("./modules/earnMoney/route");
 const spendRoutes = require("./modules/spendMoney/route");
-const cron = require("node-cron");
-//MiddleWare
-app.use(cors());
+
+app.use(
+  cors({ origin: ["http://localhost:3000", "https://rbcweb.vercel.app"] })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

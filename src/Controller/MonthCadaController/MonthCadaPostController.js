@@ -1,4 +1,5 @@
 const { monthcada, authUser } = require("../../Dbconfig/DatabaseConfig");
+const CalculateMonthAfterPaidClubCada = require("../../utlis/CalculateMonthAfterPaidClubCada");
 
 const MonthCadaPostController = async (req, res) => {
   try {
@@ -8,11 +9,12 @@ const MonthCadaPostController = async (req, res) => {
     }
 
     let payMonth;
-    const { pay, discount, email } = req.body;
+    const { pay, discount, email, perValue } = req.body;
     const { name } = await authUser.findOne({ email });
     const monthValue = [0, 0, 0, 0, 0];
     if (pay > 0) {
       payMonth = [...Array(Number(pay)).keys()].map(() => 1);
+      await CalculateMonthAfterPaidClubCada(pay, perValue, email);
     } else if (discount > 0) {
       payMonth = [...Array(Number(discount)).keys()].map(() => 0);
     }

@@ -1,5 +1,6 @@
 // const cron = require("node-cron");
 const moment = require("moment");
+moment.locale("en");
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
 const { EventsModel, authUser } = require("../src/Dbconfig/DatabaseConfig");
@@ -31,7 +32,6 @@ const enventSmsSendAutometic = async (req, res) => {
       },
     },
   ]).toArray();
-
   //Events User Email
   const eventReceiverEmail = await authUser
     .aggregate([
@@ -175,7 +175,7 @@ const enventSmsSendAutometic = async (req, res) => {
         <tr>
           <td class="body">
             <p>প্রিয়,</p>
-          
+
             <p>রূপসী বাংলা ক্লাবের পক্ষ থেকে আপনাকে জানাই আন্তরিক শুভেচ্ছে।আপনার অবগতির জন্য জানানো যাচ্ছে যে,রূপসী বাংলা ক্লাবের ওয়েবসাইটের মাধ্যমে ঘরে বসেই যেকোনো তথ্য আপনি জানতে পারবেন।</p>
                <p>রূপসী বাংলা ক্লাবের ওয়েবসাইটে প্রবেশ করে জানতে পারবেন বিগত সালের পূজা বাবদ আয়/ব্যায় , আপনার পূজার চাঁদা,সামনে কি অনুষ্ঠান আসিতেছে তার দিনক্ষন সহ আরো অনেক কিছু।</p>
             <p>এখনি ঘুরে আসুন আমাদের ওয়েবসাইটে<br><a target="_blank" href="https://rbcweb.vercel.app">এখানে চাপ দিন</a></p>
@@ -204,7 +204,7 @@ const enventSmsSendAutometic = async (req, res) => {
                             <li>ই-মেইল: <a href="mailto:subroto23das@gmail.com" style="color: #3b82f6;">subroto23das@gmail.com</a></li>
                             <li>মোবাইল: +৮৮ ০১৫ ২১৪০ ৯১৫৫</li>
                             <li>ঠিকানা: কাদিরদী,বোয়ালমারী, ফরিদপুর,, পোস্টঃ ৭৮০১</li>
-                            <li>যোগাযোগঃ 
+                            <li>যোগাযোগঃ
                             <a href="https://www.linkedin.com/in/subroto-das-94b0672b9/" style="color: #3b82f6;">www.linkedin.com</a>
                             </li>
                         </ul>

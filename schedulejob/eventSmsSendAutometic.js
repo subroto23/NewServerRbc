@@ -5,13 +5,16 @@ const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-smtp-transport");
 const { EventsModel, authUser } = require("../src/Dbconfig/DatabaseConfig");
 const { userEmail, smtpPasswordLatest } = require("../src/secret");
+const currentDate = require("../src/utlis/currentDate");
 
 const enventSmsSendAutometic = async (req, res) => {
+  const toDay = currentDate();
   // Data Getting
   const eventsData = await EventsModel.aggregate([
     {
       $match: {
-        date: { $gt: moment().format("YYYY-MM-DD") },
+        date: { $gt: toDay },
+        // date: { $gt: moment().format("YYYY-MM-DD") },
       },
     },
     {

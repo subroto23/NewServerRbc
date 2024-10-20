@@ -1,6 +1,6 @@
 const { monthcada, authUser } = require("../../Dbconfig/DatabaseConfig");
 const CalculateMonthAfterPaidClubCada = require("../../utlis/CalculateMonthAfterPaidClubCada");
-
+const startClubYearsToCurrentYearsMonthCount = require("../../utlis/startClubYearsToCurrentYearsMonthCount");
 const MonthCadaPostController = async (req, res) => {
   try {
     const emailData = req?.decoded?.email;
@@ -11,7 +11,10 @@ const MonthCadaPostController = async (req, res) => {
     let payMonth;
     const { pay, discount, email, perValue } = req.body;
     const { name } = await authUser.findOne({ email });
-    const monthValue = [0, 0, 0, 0, 0];
+    // const monthValue = [0, 0, 0, 0, 0];
+    const monthCount = startClubYearsToCurrentYearsMonthCount();
+    let monthEndToStartArryFillZero = new Array(Number(monthCount) - 1).fill(0);
+
     if (pay > 0) {
       payMonth = [...Array(Number(pay)).keys()].map(() => 1);
       await CalculateMonthAfterPaidClubCada(pay, perValue, email);
@@ -20,7 +23,11 @@ const MonthCadaPostController = async (req, res) => {
     }
     const isExist = await monthcada.findOne({ email });
     if (!isExist) {
-      await monthcada.insertOne({ email, name, month: monthValue });
+      await monthcada.insertOne({
+        email,
+        name,
+        month: monthEndToStartArryFillZero,
+      });
     }
     const isExistValue = await monthcada.findOne({ email });
     if (isExistValue) {

@@ -8,7 +8,7 @@ const newsPostController = async (req, res, next) => {
     if (!email) {
       return;
     }
-    const { title, details, image, createdBy } = req.body;
+    const { title, details, image, createdBy, metaImage } = req.body;
     const dataValues = {
       date: new Date(),
       title,
@@ -16,9 +16,9 @@ const newsPostController = async (req, res, next) => {
       createdBy,
       email,
       image,
+      metaImage,
     };
     const publishNews = await NewsModel.insertOne(dataValues);
-
     return handleSuccess(res, {
       statusCode: 200,
       message: "নিউজটি সফলভাবে পাবলিশ করা হয়েছে",

@@ -9,7 +9,7 @@ const MonthCadaGetController = async (req, res) => {
     const result = await monthcada.findOne({ email: emailValue });
     const { month, name, email } = result;
     const originalArray = month.map((data, idx) =>
-      data === 1 ? (idx < 60 ? 100 : 50) : 0
+      data === 1 ? (idx < 60 ? 100 : 50) : 0,
     );
     const subMonth = [];
     for (let i = 0; i <= originalArray.length; i = i + 12) {

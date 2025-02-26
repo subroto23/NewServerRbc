@@ -40,7 +40,7 @@ const monthCadaAutometicSend = async (req, res) => {
             user: `${userEmail}`,
             pass: `${smtpPasswordLatest}`,
           },
-        })
+        }),
       );
 
       const mailOptions = {

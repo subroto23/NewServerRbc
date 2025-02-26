@@ -16,7 +16,7 @@ const sendingMail = async (emailData) => {
 
     if (!emailData) {
       throw createHttpError(
-        "Sorry email,subject and html code not empty or typed error "
+        "Sorry email,subject and html code not empty or typed error ",
       );
     }
 

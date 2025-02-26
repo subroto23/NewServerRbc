@@ -18,7 +18,7 @@ const eventsPostController = async (req, res, next) => {
     const eventsSaveValue = await EventsModel.insertOne(eventDataPass);
     if (!eventsSaveValue) {
       throw createHttpError(
-        "এই মুহুর্তে সংযোজন করা যাচ্ছে না।আবার চেষ্টা করুন"
+        "এই মুহুর্তে সংযোজন করা যাচ্ছে না।আবার চেষ্টা করুন",
       );
     }
 

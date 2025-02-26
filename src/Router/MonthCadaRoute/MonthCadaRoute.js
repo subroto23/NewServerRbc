@@ -12,7 +12,7 @@ MonthCadaRoute.get(
   "/admin",
   // VerifyToken,
   // verifyAdmin,
-  MonthCadaAdminGetController
+  MonthCadaAdminGetController,
 );
 MonthCadaRoute.post("/create", VerifyToken, MonthCadaPostController);
 module.exports = MonthCadaRoute;

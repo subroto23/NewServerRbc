@@ -83,7 +83,7 @@ const enventSmsSendAutometic = async (req, res) => {
           user: `${userEmail}`,
           pass: `${smtpPasswordLatest}`,
         },
-      })
+      }),
     );
 
     const mailOptions = {
@@ -167,8 +167,8 @@ const enventSmsSendAutometic = async (req, res) => {
         <tr>
           <td class="header">
             <h1>${eventsData[0]?.date} তারিখ রোজ ${bengaliDayName} ${
-        eventsData[0]?.title
-      }</h1>
+              eventsData[0]?.title
+            }</h1>
             <p>${eventsData[0]?.subtitle || "আগামীদিনের উৎসব জেনে নিন"}</p>
           </td>
         </tr>

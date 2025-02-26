@@ -29,7 +29,7 @@ const validateLogIn = [
     .withMessage("Password is required")
     .matches(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{4,6}$/)
     .withMessage(
-      "Password should contain Number,upperCase letter,LowerCase letter,special character combination"
+      "Password should contain Number,upperCase letter,LowerCase letter,special character combination",
     ),
 ];
 

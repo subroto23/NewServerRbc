@@ -13,7 +13,6 @@ const notificationGetController = async (req, res) => {
       ])
       .toArray();
     return res.status(200).send(result[0]);
-    
   } catch (error) {
     console.log(error);
   }

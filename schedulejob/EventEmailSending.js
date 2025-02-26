@@ -13,7 +13,7 @@ const EventsSendSms = async (req, res) => {
         user: `${userEmail}`,
         pass: `${smtpPasswordLatest}`,
       },
-    })
+    }),
   );
   const mailOptions = {
     from: `${userEmail}`,
@@ -160,7 +160,7 @@ const EventsSendSms = async (req, res) => {
           .send({ success: true, message: "Email Send Successfully" });
       })
       .catch((err) =>
-        res.status(200).send({ success: false, message: "Email Not Send " })
+        res.status(200).send({ success: false, message: "Email Not Send " }),
       );
   } catch (error) {
     console.log(error);

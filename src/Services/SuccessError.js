@@ -1,6 +1,6 @@
 const handleError = (
   res,
-  { statusCode = 200, message = "Failed!Backend Data errors" }
+  { statusCode = 200, message = "Failed!Backend Data errors" },
 ) => {
   res.status(statusCode).json({
     success: false,
@@ -10,7 +10,7 @@ const handleError = (
 
 const handleSuccess = (
   res,
-  { statusCode = 200, message = "SuccessFully Data Found", payload = {} }
+  { statusCode = 200, message = "SuccessFully Data Found", payload = {} },
 ) => {
   res.status(statusCode).json({
     success: true,

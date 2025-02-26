@@ -11,7 +11,7 @@ require("moment/locale/bn");
 const CalculateMonthAfterPaidClubCada = async (
   payMonthCountValue,
   ratePerMonth,
-  email
+  email,
 ) => {
   if (!email) {
     return "ই-মেইল পাওয়া যাচ্ছে না";
@@ -40,7 +40,7 @@ const CalculateMonthAfterPaidClubCada = async (
   const generatorMonth = previousMonthGenerator(result);
 
   const userBasedPrevCadaDetails = generatorMonth.find(
-    (obj) => obj.email === email
+    (obj) => obj.email === email,
   );
 
   const payBeforeMonthName = userBasedPrevCadaDetails?.prevMonthName;
@@ -69,7 +69,7 @@ const CalculateMonthAfterPaidClubCada = async (
         user: `${userEmail}`,
         pass: `${smtpPasswordLatest}`,
       },
-    })
+    }),
   );
 
   const mailOptions = {

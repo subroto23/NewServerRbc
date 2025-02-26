@@ -17,7 +17,7 @@ const earnRoutes = require("./modules/earnMoney/route");
 const spendRoutes = require("./modules/spendMoney/route");
 
 app.use(
-  cors({ origin: ["http://localhost:3000", "https://rbcweb.vercel.app"] })
+  cors({ origin: ["http://localhost:3000", "https://rbcweb.vercel.app"] }),
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

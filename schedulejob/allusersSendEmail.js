@@ -39,7 +39,7 @@ const MonthCadaDueSms = async (req, res) => {
             user: `${userEmail}`,
             pass: `${smtpPasswordLatest}`,
           },
-        })
+        }),
       );
 
       const mailOptions = {
@@ -189,7 +189,7 @@ const MonthCadaDueSms = async (req, res) => {
             .send({ success: true, message: "Email Send Successfully" });
         })
         .catch((err) =>
-          res.status(200).send({ success: false, message: "Email Not Send " })
+          res.status(200).send({ success: false, message: "Email Not Send " }),
         );
     });
   } catch (error) {

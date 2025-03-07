@@ -15,9 +15,12 @@ const notificaionRoute = require("./Router/NotificationRoute/NotificationRoute")
 const bannerRouter = require("./Router/Banner/BannerRoute");
 const earnRoutes = require("./modules/earnMoney/route");
 const spendRoutes = require("./modules/spendMoney/route");
+const topAppsBannerRoutes = require("./modules/topAppsBanner/route");
+const bottomAppsBannerRoutes = require("./modules/bottomAppsBanner/route");
+const appPostsRoute = require("./modules/postApps/route");
 
 app.use(
-  cors({ origin: ["http://localhost:3000", "https://rbcweb.vercel.app"] }),
+  cors({ origin: ["http://localhost:3000", "https://rbcweb.vercel.app"] })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -61,4 +64,14 @@ app.use("/api/v1/earns", earnRoutes);
 
 //Spend Routes
 app.use("/api/v1/spends", spendRoutes);
+
+//topBanner Apps
+app.use("/api/v1/top-banners", topAppsBannerRoutes);
+
+//bottomBanner Apps
+app.use("/api/v1/bottom-banners", bottomAppsBannerRoutes);
+
+//apps posts
+app.use("/api/v1/app-posts", appPostsRoute);
+
 module.exports = app;

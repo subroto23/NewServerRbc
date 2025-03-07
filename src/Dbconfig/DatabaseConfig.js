@@ -32,6 +32,13 @@ const notification = client.db("rbcDatabase").collection("notification");
 const bannerCollection = client.db("rbcDatabase").collection("banner");
 const earnsCollection = client.db("rbcDatabase").collection("earns");
 const spendCollection = client.db("rbcDatabase").collection("spend");
+const topAppsBannerCollection = client
+  .db("rbcDatabase")
+  .collection("topbanner");
+const bottomAppsBannerCollection = client
+  .db("rbcDatabase")
+  .collection("bottombanner");
+const postAppsCollection = client.db("rbcDatabase").collection("appsPost");
 
 //Export MongoDb Collections
 module.exports = {
@@ -48,5 +55,8 @@ module.exports = {
   bannerCollection,
   earnsCollection,
   spendCollection,
+  topAppsBannerCollection,
+  bottomAppsBannerCollection,
+  postAppsCollection,
   mongodbConnection,
 };

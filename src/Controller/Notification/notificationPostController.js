@@ -2,25 +2,40 @@ const { notification } = require("../../Dbconfig/DatabaseConfig");
 
 const notificationPostController = async (req, res) => {
   try {
-    const token = req?.body?.token;
-    const email = req?.body?.email;
-    const isExist = await notification.findOne({ email: req?.body?.email });
+    const { token, email } = req.body;
+
+    if (!email || !token) {
+      return res.status(400).json({ message: "Email and Token are required" });
+    }
+
+    const isExist = await notification.findOne({ email });
+
     if (isExist) {
       if (isExist.token !== token) {
-        const result = await notification.updateOne(
+        const updatedResult = await notification.findOneAndUpdate(
           { email },
-          { $set: { token } }
+          { $set: { token } },
+          { new: true }
         );
-        return res.status(200).send(result);
+
+        if (!updatedResult) {
+          return res.status(500).json({ message: "Failed to update token" });
+        }
+
+        return res.status(200).json(updatedResult);
+      } else {
+        return res.status(200).json({ message: "Token is already up to date" });
       }
     }
 
-    if (!isExist && req?.body?.token && req?.body?.email) {
-      const result = await notification.insertOne(req?.body);
-      res.status(200).send(result);
-    }
+    // If email doesn't exist, insert a new document
+    const newNotification = new notification({ email, token });
+    const savedNotification = await newNotification.save();
+
+    return res.status(201).json(savedNotification);
   } catch (error) {
-    console.log("error");
+    console.error("Error:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

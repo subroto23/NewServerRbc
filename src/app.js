@@ -18,9 +18,12 @@ const spendRoutes = require("./modules/spendMoney/route");
 const topAppsBannerRoutes = require("./modules/topAppsBanner/route");
 const bottomAppsBannerRoutes = require("./modules/bottomAppsBanner/route");
 const appPostsRoute = require("./modules/postApps/route");
+const appCommentRoute = require("./modules/comments/route");
 
 app.use(
-  cors({ origin: ["http://localhost:3000", "https://rbcweb.vercel.app"] })
+  cors({
+    origin: ["http://localhost:3000", "https://rbcweb.vercel.app"],
+  })
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -73,5 +76,8 @@ app.use("/api/v1/bottom-banners", bottomAppsBannerRoutes);
 
 //apps posts
 app.use("/api/v1/app-posts", appPostsRoute);
+
+//app comments
+app.use("/api/v1/app-comment", appCommentRoute);
 
 module.exports = app;

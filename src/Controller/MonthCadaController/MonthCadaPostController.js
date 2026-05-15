@@ -1,6 +1,7 @@
 const { monthcada, authUser } = require("../../Dbconfig/DatabaseConfig");
 const CalculateMonthAfterPaidClubCada = require("../../utlis/CalculateMonthAfterPaidClubCada");
 const startClubYearsToCurrentYearsMonthCount = require("../../utlis/startClubYearsToCurrentYearsMonthCount");
+const sendPushNotification = require("../Notification/pushNotification");
 const MonthCadaPostController = async (req, res) => {
   try {
     const emailData = req?.decoded?.email;
@@ -37,6 +38,16 @@ const MonthCadaPostController = async (req, res) => {
       const options = { upsert: true };
       const result = await monthcada.updateOne({ email }, query, options);
       res.status(200).send(result);
+    }
+     //send notification
+    try {
+      await sendPushNotification({
+        title: `${name} ক্লাবের মাসিক চাঁদা প্রদান করেছেন`,
+        description: `ধন্যবাদ! আপনার ${pay} টাকা গৃহীত হয়েছে।`,
+        deepLink: "rbc://meeting",
+      });
+    } catch (error) {
+      console.log(error);
     }
   } catch (error) {
     console.log(error);

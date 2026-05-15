@@ -1,6 +1,7 @@
 const createHttpError = require("http-errors");
 const { ObjectId } = require("mongodb");
 const { postAppsCollection } = require("../../Dbconfig/DatabaseConfig");
+const sendPushNotification = require("../../Controller/Notification/pushNotification");
 
 const appCommentPost = async (req, res, next) => {
   try {
@@ -18,6 +19,19 @@ const appCommentPost = async (req, res, next) => {
         },
       }
     );
+
+    const {comments,name,photo} = payload || {};
+    //send notification
+    try {
+      await sendPushNotification({
+        title: `${name} কমেন্ট করেছেন`,
+        description: `আপনাকে কমেন্টের উত্তর দেওয়ার জন্য অনুরোধ করেছেন। তাই এখনি অ্যাপটি ওপেন করে কমেন্টের উত্তর প্রদান করুন।`,
+        deepLink: "rbc://meeting",
+        imageLink: photo || "",
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
     return res.status(200).send(result);
   } catch (error) {

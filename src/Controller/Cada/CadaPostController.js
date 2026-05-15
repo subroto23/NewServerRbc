@@ -1,5 +1,6 @@
 const { Cada } = require("../../Dbconfig/DatabaseConfig");
 const { handleSuccess } = require("../../Services/SuccessError");
+const sendPushNotification = require("../Notification/pushNotification");
 
 const cadaPostController = async (req, res, next) => {
   try {
@@ -14,6 +15,17 @@ const cadaPostController = async (req, res, next) => {
       paidTk,
     };
     const postData = await Cada.insertOne(bodyDatas);
+    
+    //send notification
+    try {
+      await sendPushNotification({
+        title: `${name} পূজার প্রণামী প্রদান করেছেন`,
+        description: `${paidTk} টাকা প্রদান করেছেন। পূজা কমিটির পক্ষ থেকে ধন্যবাদ`,
+        deepLink: "rbc://meeting",
+      });
+    } catch (error) {
+      console.log(error);
+    }
     return handleSuccess(res, {
       statusCode: 200,
       message: "আবেদনটি সফল হয়েছে",

@@ -1,11 +1,21 @@
 const { ObjectId } = require("mongodb");
 const { earnsCollection } = require("../../Dbconfig/DatabaseConfig");
+const sendPushNotification = require("../../Controller/Notification/pushNotification");
 
 //Create
 const createEarnController = async (req, res, next) => {
   try {
     const data = req?.body;
     const result = await earnsCollection.insertOne(req.body);
+    try {
+      await sendPushNotification({
+        title: `${result?.earnDetails} থেকে ফান্ডে অর্থ সংযুক্ত হলো।`,
+        description:`ধন্যবাদ! ${result?.senderName}। আপনার প্রদানকরা ${result?.earnValue} টাকা আমাদের ফান্ডে সংযোগ করা হয়েছে।`,
+        deepLink: "rbc://meeting",
+      });
+    } catch (error) {
+      console.log(error);
+    }
     res.status(200).send(result);
   } catch (error) {
     console.log(error);

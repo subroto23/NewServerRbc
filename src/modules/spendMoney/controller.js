@@ -8,15 +8,15 @@ const createSpendController = async (req, res, next) => {
     const data = req?.body;
     const result = await spendCollection.insertOne(req.body);
         //send notification
-    try {
-      await sendPushNotification({
-        title: `${result?.spendDetails}`,
-        description:`${result?.spendValue} টাকা ব্যায় করেছেন ${result?.spenderName}`,
-        deepLink: "rbc://meeting",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   await sendPushNotification({
+    //     title: `${result?.spendDetails}`,
+    //     description:`${result?.spendValue} টাকা ব্যায় করেছেন ${result?.spenderName}`,
+    //     deepLink: "rbc://meeting",
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     res.status(200).send(result);
   } catch (error) {

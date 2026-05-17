@@ -40,15 +40,15 @@ const MonthCadaPostController = async (req, res) => {
       res.status(200).send(result);
     }
      //send notification
-    try {
-      await sendPushNotification({
-        title: `${name} ক্লাবের মাসিক চাঁদা প্রদান করেছেন`,
-        description: `ধন্যবাদ! আপনার ${pay} টাকা গৃহীত হয়েছে।`,
-        deepLink: "rbc://meeting",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   await sendPushNotification({
+    //     title: `${name} ক্লাবের মাসিক চাঁদা প্রদান করেছেন`,
+    //     description: `ধন্যবাদ! আপনার ${pay} টাকা গৃহীত হয়েছে।`,
+    //     deepLink: "rbc://meeting",
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   } catch (error) {
     console.log(error);
   }

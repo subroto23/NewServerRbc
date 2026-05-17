@@ -6,6 +6,7 @@ const sendDailyWishNotification = require("../../Controller/Notification/everyDa
 const birthdayDeathAnniversaryHandler = require("../../Controller/Notification/BirthdayAndDethWish");
 const sendDailyEventNotifications = require("../../Controller/Notification/evenDayPushMessage");
 const sendMonthDueMessage = require("../../Controller/Notification/monthDueMessage");
+const sendDailyEveningWishNotification = require("../../Controller/Notification/everyDayEveningWishing");
 const notificaionRoute = express.Router();
 
 notificaionRoute.get("/device/token", notificationGetController);
@@ -15,5 +16,6 @@ notificaionRoute.get("/daily/wish", sendDailyWishNotification);
 notificaionRoute.get("/check-birthday-death", birthdayDeathAnniversaryHandler);
 notificaionRoute.get("/events-message", sendDailyEventNotifications);
 notificaionRoute.get("/month-due-message", sendMonthDueMessage);
+notificaionRoute.get("/daily/wish/evening",sendDailyEveningWishNotification);
 
 module.exports = notificaionRoute;

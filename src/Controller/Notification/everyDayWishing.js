@@ -449,19 +449,138 @@ const sendWithTimeout = (promise, timeoutMs = 30000) => {
   ]);
 };
 
-const sendDailyWishNotification = async (req,res,next) => {
-  try {
+// const sendDailyWishNotification = async (req,res,next) => {
+//   try {
     
+//     const users = await notification.find({}).toArray();
+//     if (!users || users.length === 0) {
+//       console.log("No users found in database");
+//       return {
+//         success: true,
+//         message: "No users found to send notifications",
+//         results: [],
+//       };
+//     }
+
+//     const today = new Date();
+//     const message = getDailyWish();
+
+//     const englishDay = today.toLocaleDateString("en-US", {
+//       weekday: "long",
+//     });
+
+//     const banglaDay = banglaWeekDays[englishDay] || "আজ";
+
+//     const dateText = today.toLocaleDateString("bn-BD", {
+//       year: "numeric",
+//       month: "long",
+//       day: "numeric",
+//     });
+
+//     const results = [];
+
+//     for (let i = 0; i < users.length; i++) {
+//       const user = users[i];
+//       const name = user?.name || "প্রিয় সদস্য";
+//       const token = user?.token;
+
+//       if (!token) {
+//         console.log(`No token for user: ${name}`);
+//         results.push({
+//           name,
+//           success: false,
+//           error: "No token available",
+//           timestamp: new Date().toISOString(),
+//         });
+//         continue;
+//       }
+
+//       try {
+//         console.log(`[${i + 1}/${users.length}] Sending to: ${name}`);
+        
+//         // টাইমআউট সহ নোটিফিকেশন পাঠানো
+//         const result = await sendWithTimeout(
+//           sendSinglePushNotification({
+//             token,
+//             title: `শুভ সকাল ${name}, আজ ${banglaDay}, ${dateText}`,
+//             message,
+//             room: "daily_wish",
+//             senderId: "system",
+//             senderName: "রূপসী বাংলা ক্লাব",
+//             deepLink: "",
+//             imageLink: "https://rbcweb.site/_next/image?url=https%3A%2F%2Fi.ibb.co.com%2F7NvsPsDr%2F105629191-19585706509423sss1-631298054909406055-n.jpg&w=1200&q=75",
+//           }),
+//           30000 
+//         );
+        
+//         // রেসপন্স চেক
+//         const isSuccess = result && (result.success === true || result.status === "success");
+        
+//         results.push({
+//           name,
+//           success: isSuccess,
+//           response: result || { message: "No response received" },
+//           timestamp: new Date().toISOString(),
+//         });
+
+//         return res.status(200).send(`Sent to ${name}: ${isSuccess ? "Success" : "Failed"}`);
+        
+//       } catch (error) {
+//         console.error(`Error sending to ${name}:`, error.message);
+//         results.push({
+//           name,
+//           success: false,
+//           error: error.message,
+//           timestamp: new Date().toISOString(),
+//         });
+//       }
+      
+//       // রেট লিমিটিং এর জন্য ডিলে
+//       if (i < users.length - 1) {
+//         await new Promise((resolve) => setTimeout(resolve, 1000)); // 1 সেকেন্ড ডিলে
+//       }
+//     }
+
+//     const successCount = results.filter((r) => r.success === true).length;
+//     const failCount = results.filter((r) => r.success !== true).length;
+//     return {
+//       success: true,
+//       message: "Daily wish notification process completed",
+//       date: `${banglaDay}, ${dateText}`,
+//       totalUsers: users.length,
+//       successCount,
+//       failCount,
+//       results,
+//       completedAt: new Date().toISOString(),
+//     };
+    
+//   } catch (error) {
+//     console.error("sendDailyWishNotification fatal error:", error);
+//     return {
+//       success: false,
+//       error: error.message,
+//       stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+//       completedAt: new Date().toISOString(),
+//     };
+//   }
+// };
+
+const sendDailyWishNotification = async (req, res, next) => {
+  try {
     const users = await notification.find({}).toArray();
     if (!users || users.length === 0) {
       console.log("No users found in database");
-      return {
+      return res.status(200).json({
         success: true,
         message: "No users found to send notifications",
         results: [],
-      };
+      });
     }
-
+res.status(202).json({
+      success: true,
+      message: "Notification sending process started successfully in the background.",
+      totalTargetedUsers: users.length,
+    });
     const today = new Date();
     const message = getDailyWish();
 
@@ -478,10 +597,9 @@ const sendDailyWishNotification = async (req,res,next) => {
     });
 
     const results = [];
-
     for (let i = 0; i < users.length; i++) {
       const user = users[i];
-      const name = user?.name || "প্রিয় সদস্য";
+      const name = user?.name || "প্রিয় সদস্য";
       const token = user?.token;
 
       if (!token) {
@@ -496,9 +614,6 @@ const sendDailyWishNotification = async (req,res,next) => {
       }
 
       try {
-        console.log(`[${i + 1}/${users.length}] Sending to: ${name}`);
-        
-        // টাইমআউট সহ নোটিফিকেশন পাঠানো
         const result = await sendWithTimeout(
           sendSinglePushNotification({
             token,
@@ -507,13 +622,12 @@ const sendDailyWishNotification = async (req,res,next) => {
             room: "daily_wish",
             senderId: "system",
             senderName: "রূপসী বাংলা ক্লাব",
-            deepLink: "rbc://meeting",
+            deepLink: "",
             imageLink: "https://rbcweb.site/_next/image?url=https%3A%2F%2Fi.ibb.co.com%2F7NvsPsDr%2F105629191-19585706509423sss1-631298054909406055-n.jpg&w=1200&q=75",
           }),
           30000 
         );
         
-        // রেসপন্স চেক
         const isSuccess = result && (result.success === true || result.status === "success");
         
         results.push({
@@ -522,8 +636,6 @@ const sendDailyWishNotification = async (req,res,next) => {
           response: result || { message: "No response received" },
           timestamp: new Date().toISOString(),
         });
-
-        return res.status(200).send(`Sent to ${name}: ${isSuccess ? "Success" : "Failed"}`);
         
       } catch (error) {
         console.error(`Error sending to ${name}:`, error.message);
@@ -535,15 +647,14 @@ const sendDailyWishNotification = async (req,res,next) => {
         });
       }
       
-      // রেট লিমিটিং এর জন্য ডিলে
       if (i < users.length - 1) {
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // 1 সেকেন্ড ডিলে
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-    }
+    } 
 
     const successCount = results.filter((r) => r.success === true).length;
     const failCount = results.filter((r) => r.success !== true).length;
-    return {
+    return res.status(200).json({
       success: true,
       message: "Daily wish notification process completed",
       date: `${banglaDay}, ${dateText}`,
@@ -552,16 +663,15 @@ const sendDailyWishNotification = async (req,res,next) => {
       failCount,
       results,
       completedAt: new Date().toISOString(),
-    };
+    });
     
   } catch (error) {
     console.error("sendDailyWishNotification fatal error:", error);
-    return {
+    return res.status(500).json({
       success: false,
       error: error.message,
-      stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
       completedAt: new Date().toISOString(),
-    };
+    });
   }
 };
 

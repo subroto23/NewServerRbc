@@ -26,7 +26,7 @@ const sendChatNotification = async ({
         deepLink,
         imageUrl: imageLink || undefined,
       },
-      
+
       android: {
         priority: "high",
         notification: {
@@ -34,8 +34,7 @@ const sendChatNotification = async ({
           channelId: "default",
           icon: "https://i.postimg.cc/02PhhR1Z/Notification-App-Logo-(96-x-96-px)-(72-x-72-px).png", // 72x72 আইকন
           imageUrl:
-            imageLink ||
-            "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png",
+            "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png" || imageLink ,
         },
       },
 

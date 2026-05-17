@@ -5,8 +5,7 @@ const sendSinglePushNotification = async ({
   title = "রূপসী বাংলা ক্লাব",
   message = "আপনার জীবন হোক সুন্দর ও আলোকিত",
   deepLink = "rbc://home",
-  imageLink =
-    "https://rbcweb.site/_next/image?url=https%3A%2F%2Fi.ibb.co.com%2F7NvsPsDr%2F105629191-19585706509423sss1-631298054909406055-n.jpg&w=1200&q=75",
+  imageLink = "https://rbcweb.site/_next/image?url=https%3A%2F%2Fi.ibb.co.com%2F7NvsPsDr%2F105629191-19585706509423sss1-631298054909406055-n.jpg&w=1200&q=75",
 }) => {
   try {
     if (!token) {
@@ -38,6 +37,7 @@ const sendSinglePushNotification = async ({
           sound: "default",
           channelId: "default",
           imageUrl: imageLink || undefined,
+          icon: "https://i.postimg.cc/PqgR40MQ/Notification-App-Logo-(96-x-96-px)-(72-x-72-px)-(48-x-48-px).png",
         },
       },
 
@@ -51,7 +51,13 @@ const sendSinglePushNotification = async ({
 
       webpush: {
         notification: {
-          icon: imageLink || undefined,
+          icon: "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png",
+          badge:
+            "https://i.postimg.cc/PqgR40MQ/Notification-App-Logo-(96-x-96-px)-(72-x-72-px)-(48-x-48-px).png",
+        },
+        headers: {
+          image:
+            "https://i.postimg.cc/02PhhR1Z/Notification-App-Logo-(96-x-96-px)-(72-x-72-px).png",
         },
       },
     };

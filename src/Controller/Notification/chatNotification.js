@@ -26,6 +26,34 @@ const sendChatNotification = async ({
         deepLink,
         imageUrl: imageLink || undefined,
       },
+      
+      android: {
+        priority: "high",
+        notification: {
+          sound: "default",
+          channelId: "default",
+          icon: "https://i.postimg.cc/02PhhR1Z/Notification-App-Logo-(96-x-96-px)-(72-x-72-px).png", // 72x72 আইকন
+          imageUrl:
+            imageLink ||
+            "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png",
+        },
+      },
+
+      webpush: {
+        notification: {
+          icon: "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png", // 96x96 আইকন
+          badge:
+            "https://i.postimg.cc/PqgR40MQ/Notification-App-Logo-(96-x-96-px)-(72-x-72-px)-(48-x-48-px).png", // 48x48 ব্যাজ
+          image:
+            imageLink ||
+            "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png",
+        },
+        headers: {
+          image:
+            imageLink ||
+            "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png",
+        },
+      },
     };
 
     const response = await admin.messaging().send(payload);

@@ -1,8 +1,6 @@
 const admin = require("firebase-admin");
 
-const {
-  notification,
-} = require("../../Dbconfig/DatabaseConfig");
+const { notification } = require("../../Dbconfig/DatabaseConfig");
 
 // ===========================================
 // FIREBASE ADMIN CONFIG
@@ -46,9 +44,7 @@ const sendPushNotification = async ({
     // FILTER TOKENS
     // ===========================================
 
-    const tokens = users
-      .map((user) => user.token)
-      .filter(Boolean);
+    const tokens = users.map((user) => user.token).filter(Boolean);
 
     if (!tokens.length) {
       console.log("No valid tokens available");
@@ -86,6 +82,7 @@ const sendPushNotification = async ({
           sound: "default",
           channelId: "default",
           imageUrl: imageLink || undefined,
+          icon: "https://i.postimg.cc/PqgR40MQ/Notification-App-Logo-(96-x-96-px)-(72-x-72-px)-(48-x-48-px).png",
         },
       },
 
@@ -99,7 +96,13 @@ const sendPushNotification = async ({
 
       webpush: {
         notification: {
-          icon: imageLink || undefined,
+          icon: "https://i.postimg.cc/PJz9NKYQ/Notification-App-Logo-(96-x-96-px).png",
+          badge:
+            "https://i.postimg.cc/PqgR40MQ/Notification-App-Logo-(96-x-96-px)-(72-x-72-px)-(48-x-48-px).png",
+        },
+        headers: {
+          image:
+            "https://i.postimg.cc/02PhhR1Z/Notification-App-Logo-(96-x-96-px)-(72-x-72-px).png",
         },
       },
     };
@@ -108,17 +111,11 @@ const sendPushNotification = async ({
     // SEND NOTIFICATION
     // ===========================================
 
-    const response = await admin
-      .messaging()
-      .sendEachForMulticast(message);
+    const response = await admin.messaging().sendEachForMulticast(message);
 
-    console.log(
-      `Success: ${response.successCount}`
-    );
+    console.log(`Success: ${response.successCount}`);
 
-    console.log(
-      `Failed: ${response.failureCount}`
-    );
+    console.log(`Failed: ${response.failureCount}`);
 
     // ===========================================
     // HANDLE INVALID TOKENS
@@ -130,17 +127,12 @@ const sendPushNotification = async ({
       if (!resp.success) {
         const errorCode = resp.error?.code;
 
-        console.log(
-          `Token Error: ${tokens[index]}`,
-          errorCode
-        );
+        console.log(`Token Error: ${tokens[index]}`, errorCode);
 
         // Expired / Invalid Token
         if (
-          errorCode ===
-            "messaging/registration-token-not-registered" ||
-          errorCode ===
-            "messaging/invalid-registration-token"
+          errorCode === "messaging/registration-token-not-registered" ||
+          errorCode === "messaging/invalid-registration-token"
         ) {
           invalidTokens.push(tokens[index]);
         }
@@ -158,9 +150,7 @@ const sendPushNotification = async ({
         },
       });
 
-      console.log(
-        `${invalidTokens.length} invalid tokens removed`
-      );
+      console.log(`${invalidTokens.length} invalid tokens removed`);
     }
 
     // ===========================================
@@ -177,14 +167,10 @@ const sendPushNotification = async ({
 
       failureCount: response.failureCount,
 
-      invalidTokensRemoved:
-        invalidTokens.length,
+      invalidTokensRemoved: invalidTokens.length,
     };
   } catch (error) {
-    console.error(
-      "Push Notification Error:",
-      error
-    );
+    console.error("Push Notification Error:", error);
 
     return {
       success: false,

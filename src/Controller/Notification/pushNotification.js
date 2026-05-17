@@ -23,7 +23,7 @@ if (!admin.apps.length) {
 const sendPushNotification = async ({
   title = "Rupashi Bangla Club",
   description = "New Notification",
-  deepLink = "https://rbcweb.site",
+  deepLink = "rbc://meeting",
   imageLink = "https://rbcweb.site/_next/image?url=https%3A%2F%2Fi.ibb.co.com%2F7NvsPsDr%2F105629191-19585706509423sss1-631298054909406055-n.jpg&w=1200&q=75",
 }) => {
   try {

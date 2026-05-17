@@ -451,96 +451,112 @@ const addSpouseController = async (
 // ADD CHILD
 // ======================================================
 
-const addChildController = async (
-  req,
-  res,
-  next
-) => {
+const addChildController = async (req, res, next) => {
   try {
     const { id } = req.params;
-
     const { childId } = req.body;
 
     if (!childId) {
-      throw createHttpError(
-        400,
-        "Child ID is required"
-      );
+      throw createHttpError(400, "Child ID is required");
     }
 
     // ============================================
     // GET PARENT
     // ============================================
-
-    const parent =
-      await villagePeople.findOne({
-        _id: new ObjectId(id),
-      });
+    const parent = await villagePeople.findOne({
+      _id: new ObjectId(id),
+    });
 
     if (!parent) {
-      throw createHttpError(
-        404,
-        "Parent not found"
-      );
+      throw createHttpError(404, "Parent not found");
     }
 
-    // ============================================
-    // UPDATE PARENT
-    // ============================================
+    const childObjectId = new ObjectId(childId);
 
+    // ============================================
+    // 1. UPDATE PARENT -> ADD CHILD
+    // ============================================
     await villagePeople.updateOne(
-      {
-        _id: new ObjectId(id),
-      },
+      { _id: new ObjectId(id) },
       {
         $addToSet: {
-          childrenIds:
-            new ObjectId(childId),
+          childrenIds: childObjectId,
         },
       }
     );
 
     // ============================================
-    // UPDATE CHILD
+    // 2. UPDATE CHILD -> SET FATHER/MOTHER
     // ============================================
-
-    if (
-      parent.gender === "Male"
-    ) {
+    if (parent.gender === "Male") {
       await villagePeople.updateOne(
-        {
-          _id: new ObjectId(
-            childId
-          ),
-        },
+        { _id: childObjectId },
         {
           $set: {
-            fatherId:
-              new ObjectId(id),
+            fatherId: new ObjectId(id),
           },
         }
       );
     } else {
       await villagePeople.updateOne(
-        {
-          _id: new ObjectId(
-            childId
-          ),
-        },
+        { _id: childObjectId },
         {
           $set: {
-            motherId:
-              new ObjectId(id),
+            motherId: new ObjectId(id),
           },
         }
       );
     }
 
+    // ============================================
+    // 3.  AUTO ADD CHILD TO SPOUSE ALSO
+    // ============================================
+    if (parent.spouseIds && parent.spouseIds.length > 0) {
+      for (const spouseId of parent.spouseIds) {
+        const spouseObjectId = new ObjectId(spouseId);
+
+        // spouse -> add child
+        await villagePeople.updateOne(
+          { _id: spouseObjectId },
+          {
+            $addToSet: {
+              childrenIds: childObjectId,
+            },
+          }
+        );
+
+        // child -> also link second parent
+        const spouse = await villagePeople.findOne({
+          _id: spouseObjectId,
+        });
+
+        if (spouse) {
+          if (spouse.gender === "Male") {
+            await villagePeople.updateOne(
+              { _id: childObjectId },
+              {
+                $set: {
+                  fatherId: spouseObjectId,
+                },
+              }
+            );
+          } else {
+            await villagePeople.updateOne(
+              { _id: childObjectId },
+              {
+                $set: {
+                  motherId: spouseObjectId,
+                },
+              }
+            );
+          }
+        }
+      }
+    }
+
     return res.status(200).json({
       success: true,
-
-      message:
-        "Child added successfully",
+      message: "Child added successfully (including spouse)",
     });
   } catch (error) {
     next(error);

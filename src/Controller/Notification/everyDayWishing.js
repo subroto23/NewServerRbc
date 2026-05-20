@@ -1036,135 +1036,119 @@ const delay = (ms) =>
     setTimeout(resolve, ms)
   );
 
-// background notification sender
-const processNotifications = async (users) => {
-  try {
-    const today = new Date();
 
-    const message = getDailyWish();
+const sendDailyWishNotification =
+  async (req, res) => {
+    try {
+      const users = await notification
+        .find({})
+        .toArray();
 
-    const englishDay = today.toLocaleDateString("en-US", {
-      weekday: "long",
-    });
-
-    const banglaDay = banglaWeekDays[englishDay] || "আজ";
-
-    const dateText = today.toLocaleDateString("bn-BD", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    let successCount = 0;
-    let failCount = 0;
-
-    for (const [index, user] of users.entries()) {
-      const name = user?.name || "প্রিয় সদস্য";
-      const token = user?.token;
-
-      if (!token) {
-        failCount++;
-        continue;
+      if (!users.length) {
+        return res.status(200).json({
+          success: false,
+          message: "No users found",
+        });
       }
 
-      try {
-        const result = await sendSinglePushNotification({
-          token,
-
-          title: `শুভ সকাল ${name}, আজ ${banglaDay}, ${dateText}`,
-
-          message,
-
-          room: "daily_wish",
-
-          senderId: "system",
-          senderName: "রূপসী বাংলা ক্লাব",
-
-          deepLink: "",
-
-          imageLink:
-            "https://rbcweb.site/_next/image?url=https%3A%2F%2Fi.ibb.co.com%2F7NvsPsDr%2F105629191-19585706509423sss1-631298054909406055-n.jpg&w=1200&q=75",
+      const today = new Date();
+      const englishDay =
+        today.toLocaleDateString("en-US", {
+          weekday: "long",
         });
 
-        const isSuccess =
-          result?.success === true ||
-          result?.messageId ||
-          result?.status === "success";
+      const banglaDay =
+        banglaWeekDays[englishDay] || "আজ";
 
-        if (isSuccess) {
-          successCount++;
-        } else {
+      const dateText =
+        today.toLocaleDateString("bn-BD", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+      const message = getDailyWish();
+
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const user of users) {
+        try {
+          const token = user?.token;
+
+          if (!token) {
+            failCount++;
+            continue;
+          }
+
+          const result =
+            await sendSinglePushNotification({
+              token,
+               title: `শুভ সকাল ${name}, আজ ${banglaDay}, ${dateText}`,
+              message,
+              room: "daily_morning_wish",
+              senderId: "system",
+              senderName:
+                "রূপসী বাংলা ক্লাব",
+              deepLink: "",
+              imageLink:
+                "https://i.ibb.co.com/7NvsPsDr/105629191-19585706509423sss1-631298054909406055-n.jpg",
+            });
+
+          if (
+            result?.success ||
+            result?.messageId
+          ) {
+            successCount++;
+
+            console.log(
+              `✅ Success: ${user?.name}`
+            );
+          } else {
+            failCount++;
+
+            console.log(
+              `❌ Failed: ${user?.name}`
+            );
+          }
+        } catch (error) {
           failCount++;
-        }
-      } catch (error) {
-        failCount++;
 
-        if (
-          error.message?.includes("not-registered") ||
-          error.message?.includes("invalid-registration-token")
-        ) {
-          await notification.deleteOne({ token });
+          console.error(
+            `❌ Error for ${user?.name}:`,
+            error.message
+          );
+
+          // invalid token remove
+          if (
+            error.message?.includes(
+              "registration-token-not-registered"
+            )
+          ) {
+            await notification.deleteOne({
+              token: user.token,
+            });
+          }
         }
+
+        await delay(300);
       }
 
-      await delay(500);
-    }
-
-    return {
-      totalUsers: users.length,
-      successCount,
-      failCount,
-    };
-  } catch (error) {
-    console.error("Background process failed:", error);
-
-    return {
-      totalUsers: users.length,
-      successCount: 0,
-      failCount: users.length,
-    };
-  }
-};
-
-// controller
-const sendDailyWishNotification = async (req, res) => {
-  try {
-    const users = await notification.find({}).toArray();
-
-    if (!users || users.length === 0) {
       return res.status(200).json({
         success: true,
-        message: "No users found to send notifications",
-        totalTargetedUsers: 0,
-        successCount: 0,
-        failCount: 0,
+        totalUsers: users.length,
+        successCount,
+        failCount,
+      });
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).json({
+        success: false,
+        error: error.message,
       });
     }
-
-    // response immediately (but track result)
-    res.status(202).json({
-      success: true,
-      message: "Notification sending started successfully",
-      totalTargetedUsers: users.length,
-      successCount: 0,
-      failCount: 0,
-      status: "processing",
-    });
-
-    setImmediate(async () => {
-      const result = await processNotifications(users);
-
-      console.log("FINAL RESULT:", result);
-    });
-  } catch (error) {
-    console.error("sendDailyWishNotification error:", error);
-
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-    });
-  }
-};
+  };
 
 module.exports = sendDailyWishNotification;
 
